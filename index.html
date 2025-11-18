@@ -1,1202 +1,985 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Class 8 Quiz App</title>
-    <!-- PWA Configuration Links -->
-    <link rel="manifest" href="./manifest.json">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <link rel="apple-touch-icon" href="https://placehold.co/192x192/4F46E5/ffffff?text=QZ">
-    
-    <!-- Load Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Load React, ReactDOM, and Babel -->
-    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+import React, { useState, useEffect } from 'react';
+import { BookOpen, Brain, Heart, Globe, Beaker, Calculator, Home, BarChart3, Trophy, Clock, CheckCircle, XCircle, SkipForward, User, LogOut, LogIn, ChevronLeft } from 'lucide-react';
 
-    <style>
-        /* Custom font and layout setup */
-        body {
-            font-family: 'Inter', sans-serif;
-            margin: 0;
-            padding: 0;
-            overscroll-behavior-y: contain; /* Prevents pull-to-refresh on mobile */
+// --- QUIZ DATA STRUCTURE ---
+const quizData = {
+    math: {
+        name: "Mathematics",
+        icon: Calculator,
+        color: "from-blue-500 to-blue-600",
+        chapters: {
+            algebra: {
+                name: "Algebra",
+                questions: [
+                    { q: "What is the value of x in: 2x + 5 = 15?", options: ["5", "10", "7", "8"], correct: 0 },
+                    { q: "Solve for y: 3y - 7 = 14", options: ["7", "5", "9", "6"], correct: 0 },
+                    { q: "What is the coefficient of x in: 5x + 3?", options: ["5", "3", "8", "x"], correct: 0 },
+                    { q: "Simplify: 2(x + 3) = ?", options: ["2x + 6", "2x + 3", "x + 6", "2x + 9"], correct: 0 },
+                    { q: "If x = 4, what is 3x + 2?", options: ["14", "12", "10", "16"], correct: 0 },
+                    { q: "What is x² when x = 5?", options: ["25", "10", "20", "15"], correct: 0 },
+                    { q: "Solve: x/4 = 3", options: ["12", "7", "4", "16"], correct: 0 },
+                    { q: "What is the value of 2x when x = 8?", options: ["16", "10", "18", "14"], correct: 0 },
+                    { q: "Solve: 4x - 12 = 0", options: ["3", "4", "2", "1"], correct: 0 },
+                    { q: "If 5x = 35, then x = ?", options: ["7", "5", "8", "6"], correct: 0 },
+                    { q: "What is x in: x + 15 = 30?", options: ["15", "10", "20", "25"], correct: 0 }
+                ]
+            },
+            geometry: {
+                name: "Geometry",
+                questions: [
+                    { q: "Area of circle with radius 7 cm? (π = 22/7)", options: ["154 cm²", "144 cm²", "164 cm²", "174 cm²"], correct: 0 },
+                    { q: "How many sides does a decagon have?", options: ["10", "8", "12", "9"], correct: 0 },
+                    { q: "Sum of angles in a triangle?", options: ["180°", "360°", "90°", "270°"], correct: 0 },
+                    { q: "Area of rectangle: length 8cm, width 5cm?", options: ["40 cm²", "13 cm²", "45 cm²", "35 cm²"], correct: 0 },
+                    { q: "Perimeter of square with side 6cm?", options: ["24 cm", "36 cm", "18 cm", "12 cm"], correct: 0 },
+                    { q: "How many faces does a cube have?", options: ["6", "8", "12", "4"], correct: 0 },
+                    { q: "What is the diameter of a circle with radius 10cm?", options: ["20 cm", "10 cm", "30 cm", "5 cm"], correct: 0 },
+                    { q: "Volume of cube with side 3cm?", options: ["27 cm³", "9 cm³", "12 cm³", "18 cm³"], correct: 0 },
+                    { q: "Area of triangle: base 10cm, height 6cm?", options: ["30 cm²", "60 cm²", "16 cm²", "20 cm²"], correct: 0 },
+                    { q: "How many edges does a cube have?", options: ["12", "8", "6", "10"], correct: 0 },
+                    { q: "Circumference of circle with radius 7cm? (π=22/7)", options: ["44 cm", "154 cm", "28 cm", "88 cm"], correct: 0 }
+                ]
+            },
+            numbers: {
+                name: "Numbers & Operations",
+                questions: [
+                    { q: "What is the cube root of 729?", options: ["9", "8", "7", "6"], correct: 0 },
+                    { q: "LCM of 12 and 18?", options: ["36", "24", "54", "72"], correct: 0 },
+                    { q: "HCF of 24 and 36?", options: ["12", "6", "18", "24"], correct: 0 },
+                    { q: "What is 15% of 200?", options: ["30", "25", "35", "40"], correct: 0 },
+                    { q: "Square of 13?", options: ["169", "144", "196", "121"], correct: 0 },
+                    { q: "What is 2³ × 2²?", options: ["32", "16", "64", "8"], correct: 0 },
+                    { q: "Convert 0.75 to fraction", options: ["3/4", "2/3", "4/5", "1/2"], correct: 0 },
+                    { q: "What is 20% of 150?", options: ["30", "25", "35", "20"], correct: 0 },
+                    { q: "Find the average of 10, 20, 30, 40", options: ["25", "20", "30", "15"], correct: 0 },
+                    { q: "What is 3⁴?", options: ["81", "64", "27", "12"], correct: 0 },
+                    { q: "Simplify: 48 ÷ 6 + 2", options: ["10", "8", "12", "6"], correct: 0 }
+                ]
+            }
         }
-        #root {
-            min-height: 100vh;
+    },
+    science: {
+        name: "Science",
+        icon: Beaker,
+        color: "from-green-500 to-green-600",
+        chapters: {
+            biology: {
+                name: "Biology - Cell Structure",
+                questions: [
+                    { q: "What is the powerhouse of the cell?", options: ["Mitochondria", "Nucleus", "Ribosome", "Chloroplast"], correct: 0 },
+                    { q: "Which organelle controls cell activities?", options: ["Nucleus", "Mitochondria", "Cell membrane", "Cytoplasm"], correct: 0 },
+                    { q: "What gives plants their green color?", options: ["Chlorophyll", "Carotene", "Xanthophyll", "Anthocyanin"], correct: 0 },
+                    { q: "Cell wall is found in?", options: ["Plants", "Animals", "Humans", "Bacteria only"], correct: 0 },
+                    { q: "What is the basic unit of life?", options: ["Cell", "Tissue", "Organ", "Atom"], correct: 0 },
+                    { q: "Which organelle helps in protein synthesis?", options: ["Ribosome", "Lysosome", "Vacuole", "Golgi body"], correct: 0 },
+                    { q: "What is the jelly-like substance in cells?", options: ["Cytoplasm", "Nucleoplasm", "Protoplasm", "Plasma"], correct: 0 },
+                    { q: "Lysosomes are known as?", options: ["Suicide bags", "Power house", "Control center", "Storage units"], correct: 0 }
+                ]
+            },
+            chemistry: {
+                name: "Chemistry - Elements & Compounds",
+                questions: [
+                    { q: "Chemical formula for water?", options: ["H2O", "CO2", "NaCl", "O2"], correct: 0 },
+                    { q: "Which gas do plants absorb?", options: ["Carbon Dioxide", "Oxygen", "Nitrogen", "Hydrogen"], correct: 0 },
+                    { q: "Symbol for Gold?", options: ["Au", "Ag", "Fe", "Cu"], correct: 0 },
+                    { q: "Common salt is?", options: ["NaCl", "KCl", "CaCl2", "MgCl2"], correct: 0 },
+                    { q: "Atomic number of Carbon?", options: ["6", "12", "8", "14"], correct: 0 },
+                    { q: "pH of pure water?", options: ["7", "0", "14", "10"], correct: 0 },
+                    { q: "What is the symbol for Iron?", options: ["Fe", "Ir", "In", "I"], correct: 0 },
+                    { q: "Which gas is needed for burning?", options: ["Oxygen", "Nitrogen", "Carbon dioxide", "Helium"], correct: 0 }
+                ]
+            },
+            physics: {
+                name: "Physics - Force & Motion",
+                questions: [
+                    { q: "Unit of force?", options: ["Newton", "Joule", "Watt", "Pascal"], correct: 0 },
+                    { q: "Speed of light?", options: ["3\\times 10^8 m/s", "3\\times 10^6 m/s", "3\\times 10^7 m/s", "3\\times 10^9 m/s"], correct: 0 },
+                    { q: "SI unit of pressure?", options: ["Pascal", "Newton", "Bar", "Atmosphere"], correct: 0 },
+                    { q: "Formula for speed?", options: ["Distance/Time", "Time/Distance", "Distance\\times Time", "Force\\times Time"], correct: 0 },
+                    { q: "Acceleration due to gravity?", options: ["9.8 m/s²", "10 m/s²", "8.9 m/s²", "9 m/s²"], correct: 0 },
+                    { q: "1 Newton equals?", options: ["1 kg\\cdot m/s²", "1 kg\\cdot m", "1 kg/s²", "1 m/s²"], correct: 0 },
+                    { q: "What is inertia?", options: ["Resistance to motion", "Force applied", "Speed of object", "Mass of object"], correct: 0 },
+                    { q: "Friction is a?", options: ["Contact force", "Non-contact force", "Magnetic force", "Gravitational force"], correct: 0 }
+                ]
+            }
         }
-    </style>
-    
-    <!-- PWA Manifest embedded for single-file deployment -->
-    <script id="manifest-data" type="application/json">
-    {
-      "name": "Class 8 Quiz",
-      "short_name": "C8 Quiz",
-      "description": "Interactive quiz app for Class 8 students.",
-      "start_url": ".",
-      "display": "standalone",
-      "background_color": "#ffffff",
-      "theme_color": "#4F46E5",
-      "icons": [
-        {
-          "src": "https://placehold.co/192x192/4F46E5/ffffff?text=QZ",
-          "sizes": "192x192",
-          "type": "image/png"
-        },
-        {
-          "src": "https://placehold.co/512x512/4F46E5/ffffff?text=QZ",
-          "sizes": "512x512",
-          "type": "image/png"
+    },
+    health: {
+        name: "Health & PE",
+        icon: Heart,
+        color: "from-red-500 to-red-600",
+        chapters: {
+            humanbody: {
+                name: "Human Body Organization",
+                questions: [
+                    { q: "What is considered the basic unit of life in the human body?", options: ["Organ", "Tissue", "Cell", "Organ System"], correct: 2 },
+                    { q: "The human body is described as a multicellular organism. What does 'multicellular' primarily mean?", options: ["Having only one cell", "Having many different colors", "Having many cells", "Having many systems"], correct: 2 },
+                    { q: "In the hierarchy of organization, what level comes directly after cells?", options: ["Organ systems", "Organs", "Homeostasis", "Tissues"], correct: 3 },
+                    { q: "A collection of similar tissues working together forms what level of organization?", options: ["A cell", "An organ", "An external world", "A basic unit"], correct: 1 },
+                    { q: "What is the highest level of structural organization mentioned, which is made up of a collection of organs?", options: ["Organ systems", "Tissues", "Homeostasis", "Multicellular"], correct: 0 },
+                    { q: "The arrangement of structures from cells to tissues to organs and organ systems is called a remarkable:", options: ["Simple structure", "Life function", "Hierarchy of organization", "External world"], correct: 2 },
+                    { q: "The human body maintains a stable internal environment through a process called:", options: ["Coordination", "Complexity", "Homeostasis", "Integration"], correct: 2 },
+                    { q: "Organ systems work in an integrated and coordinated manner to perform essential:", options: ["External interactions", "Life functions", "Single-cell tasks", "Stable environments"], correct: 1 },
+                    { q: "What is the function of homeostasis?", options: ["To break down food", "To interact with the external world", "To make the body complex", "To maintain a stable internal environment"], correct: 3 },
+                    { q: "Which characteristic describes the human body?", options: ["Simple and unicellular", "Complex and multicellular", "Basic unit of life", "A stable external world"], correct: 1 },
+                    { q: "What is the structural level that is a collection of organ systems?", options: ["The basic unit", "The human organism", "The tissue", "The organ"], correct: 1 },
+                    { q: "Which level of organization is found directly before the Organ System level?", options: ["Cells", "Tissues", "Organs", "The external world"], correct: 2 },
+                    { q: "The main role of organ systems is to allow interaction with what?", options: ["The internal environment", "The stable internal body", "The complex structure", "The external world"], correct: 3 },
+                    { q: "Which term means working together in a smooth and combined way?", options: ["Multicellular", "Basic unit", "Integrated and coordinated", "Hierarchy of organization"], correct: 2 },
+                    { q: "What does the word 'basic' refer to in the phrase 'basic unit of life'?", options: ["The most complex", "The most important start", "The final stage", "The combined function"], correct: 1 },
+                    { q: "Which is the correct order of organization from smallest to largest?", options: ["Organ System → Organ → Tissue → Cell", "Cell → Organ System → Tissue → Organ", "Cell → Tissue → Organ → Organ System", "Organ → Cell → Tissue → Organ System"], correct: 2 },
+                    { q: "What do organ systems aim to keep stable?", options: ["The complexity of the body", "The internal environment", "The external world", "The hierarchy of organization"], correct: 1 },
+                    { q: "The description states the body is a collection of organ systems. What does 'collection' imply?", options: ["They work separately", "They are all gathered together", "They are only one unit", "They only break down"], correct: 1 },
+                    { q: "Which term from the text refers to a group of similar cells working together?", options: ["Organ", "Tissue", "Cell", "Homeostasis"], correct: 1 },
+                    { q: "Besides maintaining homeostasis, what else do organ systems do?", options: ["Only define the basic unit", "Perform essential life functions", "Stop all coordination", "Only form tissues"], correct: 1 }
+                ]
+            },
+            nutrition: {
+                name: "Nutrition & Diet",
+                questions: [
+                    { q: "Primary source of energy?", options: ["Carbohydrates", "Proteins", "Fats", "Vitamins"], correct: 0 },
+                    { q: "Vitamin produced by sunlight?", options: ["Vitamin D", "Vitamin C", "Vitamin A", "Vitamin B12"], correct: 0 },
+                    { q: "Daily water intake for teens?", options: ["8-10 glasses", "3-4 glasses", "5-6 glasses", "15-20 glasses"], correct: 0 },
+                    { q: "Which vitamin helps in blood clotting?", options: ["Vitamin K", "Vitamin C", "Vitamin D", "Vitamin E"], correct: 0 },
+                    { q: "Protein-rich food?", options: ["Eggs", "Rice", "Bread", "Apple"], correct: 0 },
+                    { q: "Deficiency of Vitamin C causes?", options: ["Scurvy", "Rickets", "Anemia", "Goiter"], correct: 0 },
+                    { q: "Which mineral is important for bones?", options: ["Calcium", "Iron", "Sodium", "Potassium"], correct: 0 },
+                    { q: "Fiber-rich foods help in?", options: ["Digestion", "Blood clotting", "Vision", "Hair growth"], correct: 0 }
+                ]
+            },
+            fitness: {
+                name: "Physical Fitness",
+                questions: [
+                    { q: "Exercise frequency per week?", options: ["3-5 times", "Once a week", "Every day", "Only weekends"], correct: 0 },
+                    { q: "Sleep hours for teenagers?", options: ["8-10 hours", "5-6 hours", "6-7 hours", "11-12 hours"], correct: 0 },
+                    { q: "Best time to drink water during exercise?", options: ["Before, during, after", "Only after", "Only before", "Only during"], correct: 0 },
+                    { q: "What does BMI stand for?", options: ["Body Mass Index", "Body Muscle Index", "Body Metabolism Index", "Bone Mass Index"], correct: 0 },
+                    { q: "Warm-up exercises help?", options: ["Prevent injuries", "Build muscle", "Lose weight", "Increase height"], correct: 0 },
+                    { q: "Aerobic exercise improves?", options: ["Heart health", "Flexibility", "Muscle size", "Bone density"], correct: 0 },
+                    { q: "Stretching improves?", options: ["Flexibility", "Strength", "Speed", "Endurance"], correct: 0 },
+                    { q: "Cooldown after exercise helps?", options: ["Reduce muscle soreness", "Burn more calories", "Build strength", "Increase speed"], correct: 0 }
+                ]
+            }
         }
-      ]
+    },
+    geography: {
+        name: "Geography",
+        icon: Globe,
+        color: "from-purple-500 to-purple-600",
+        chapters: {
+            physical: {
+                name: "Physical Geography",
+                questions: [
+                    { q: "Largest continent by area?", options: ["Asia", "Africa", "North America", "Europe"], correct: 0 },
+                    { q: "Longest river in the world?", options: ["Nile", "Amazon", "Yangtze", "Mississippi"], correct: 0 },
+                    { q: "Largest ocean?", options: ["Pacific", "Atlantic", "Indian", "Arctic"], correct: 0 },
+                    { q: "Highest mountain peak?", options: ["Mt. Everest", "K2", "Kangchenjunga", "Makalu"], correct: 0 },
+                    { q: "Largest desert?", options: ["Sahara", "Arabian", "Gobi", "Kalahari"], correct: 0 },
+                    { q: "Largest island?", options: ["Greenland", "New Guinea", "Borneo", "Madagascar"], correct: 0 },
+                    { q: "Deepest ocean trench?", options: ["Mariana", "Tonga", "Philippine", "Kermadec"], correct: 0 },
+                    { q: "Longest mountain range?", options: ["Andes", "Himalayas", "Rockies", "Alps"], correct: 0 }
+                ]
+            },
+            political: {
+                name: "Political Geography",
+                questions: [
+                    { q: "Capital of Australia?", options: ["Canberra", "Sydney", "Melbourne", "Brisbane"], correct: 0 },
+                    { q: "Number of continents?", options: ["7", "5", "6", "8"], correct: 0 },
+                    { q: "Largest country by area?", options: ["Russia", "Canada", "China", "USA"], correct: 0 },
+                    { q: "Capital of Brazil?", options: ["Brasília", "Rio de Janeiro", "São Paulo", "Salvador"], correct: 0 },
+                    { q: "Which country has most population?", options: ["India", "China", "USA", "Indonesia"], correct: 0 },
+                    { q: "Capital of Egypt?", options: ["Cairo", "Alexandria", "Giza", "Luxor"], correct: 0 },
+                    { q: "Smallest country by area?", options: ["Vatican City", "Monaco", "Nauru", "San Marino"], correct: 0 },
+                    { q: "Capital of Japan?", options: ["Tokyo", "Osaka", "Kyoto", "Hiroshima"], correct: 0 }
+                ]
+            }
+        }
+    },
+    english: {
+        name: "English",
+        icon: BookOpen,
+        color: "from-orange-500 to-orange-600",
+        chapters: {
+            grammar: {
+                name: "Grammar Basics",
+                questions: [
+                    { q: "What is a noun?", options: ["Person, place, thing", "Action word", "Describing word", "Connecting word"], correct: 0 },
+                    { q: "Plural of 'child'?", options: ["Children", "Childs", "Childrens", "Childes"], correct: 0 },
+                    { q: "Punctuation for possession?", options: ["Apostrophe (')", "Comma (,)", "Period (.)", "Colon (:)"], correct: 0 },
+                    { q: "What is a verb?", options: ["Action word", "Naming word", "Describing word", "Joining word"], correct: 0 },
+                    { q: "Past tense of 'go'?", options: ["Went", "Gone", "Goed", "Going"], correct: 0 },
+                    { q: "Which is an adjective?", options: ["Beautiful", "Run", "Quickly", "And"], correct: 0 },
+                    { q: "What is a pronoun?", options: ["Replaces noun", "Action word", "Describing word", "Number word"], correct: 0 },
+                    { q: "Plural of 'mouse'?", options: ["Mice", "Mouses", "Meese", "Mices"], correct: 0 }
+                ]
+            },
+            vocabulary: {
+                name: "Vocabulary & Spellings",
+                questions: [
+                    { q: "Correct spelling?", options: ["Definitely", "Definately", "Definetly", "Definitly"], correct: 0 },
+                    { q: "Synonym for 'happy'?", options: ["Joyful", "Sad", "Angry", "Tired"], correct: 0 },
+                    { q: "Antonym for 'hot'?", options: ["Cold", "Warm", "Cool", "Tepid"], correct: 0 },
+                    { q: "Meaning of 'abundant'?", options: ["Plentiful", "Scarce", "Empty", "Few"], correct: 0 },
+                    { q: "Correct spelling?", options: ["Necessary", "Neccessary", "Neccesary", "Necesary"], correct: 0 },
+                    { q: "Synonym for 'difficult'?", options: ["Hard", "Easy", "Simple", "Clear"], correct: 0 },
+                    { q: "Meaning of 'enormous'?", options: ["Very large", "Very small", "Medium", "Tiny"], correct: 0 },
+                    { q: "Antonym for 'strong'?", options: ["Weak", "Powerful", "Sturdy", "Tough"], correct: 0 }
+                ]
+            }
+        }
+    },
+    history: {
+        name: "History",
+        icon: Brain,
+        color: "from-yellow-500 to-yellow-600",
+        chapters: {
+            indian: {
+                name: "Indian History",
+                questions: [
+                    { q: "India's independence year?", options: ["1947", "1945", "1950", "1942"], correct: 0 },
+                    { q: "Father of the Nation?", options: ["Mahatma Gandhi", "Nehru", "Patel", "Bose"], correct: 0 },
+                    { q: "First PM of India?", options: ["Jawaharlal Nehru", "Lal Bahadur Shastri", "Indira Gandhi", "Rajendra Prasad"], correct: 0 },
+                    { q: "Constitution adopted on?", options: ["26 Jan 1950", "15 Aug 1947", "26 Nov 1949", "2 Oct 1947"], correct: 0 },
+                    { q: "Quit India Movement started in?", options: ["1942", "1940", "1945", "1947"], correct: 0 },
+                    { q: "Who wrote National Anthem?", options: ["Rabindranath Tagore", "Bankim Chandra", "Sarojini Naidu", "Subhas Bose"], correct: 0 },
+                    { q: "Iron Man of India?", options: ["Sardar Patel", "Bhagat Singh", "Lal Bahadur Shastri", "B.R. Ambedkar"], correct: 0 },
+                    { q: "First President of India?", options: ["Rajendra Prasad", "S. Radhakrishnan", "Zakir Husain", "APJ Abdul Kalam"], correct: 0 }
+                ]
+            },
+            world: {
+                name: "World History",
+                questions: [
+                    { q: "First US President?", options: ["George Washington", "Thomas Jefferson", "Abraham Lincoln", "John Adams"], correct: 0 },
+                    { q: "World War II ended in?", options: ["1945", "1944", "1946", "1943"], correct: 0 },
+                    { q: "Who invented telephone?", options: ["Alexander Graham Bell", "Thomas Edison", "Nikola Tesla", "Benjamin Franklin"], correct: 0 },
+                    { q: "Pyramids built by?", options: ["Egyptians", "Romans", "Greeks", "Mayans"], correct: 0 },
+                    { q: "French Revolution year?", options: ["1789", "1776", "1799", "1804"], correct: 0 },
+                    { q: "Columbus discovered America in?", options: ["1492", "1500", "1488", "1498"], correct: 0 },
+                    { q: "First man on moon?", options: ["Neil Armstrong", "Buzz Aldrin", "Yuri Gagarin", "John Glenn"], correct: 0 },
+                    { q: "World War I started in?", options: ["1914", "1918", "1910", "1920"], correct: 0 }
+                ]
+            }
+        }
     }
-    </script>
-    <script>
-        // Inject the manifest.json file dynamically because Netlify/GitHub Pages needs the file path
-        // For a true single file solution, this is a workaround. 
-        // NOTE: For best results on Netlify, you should still include a manifest.json file with the same content
-        // alongside this index.html file. For the purpose of this single-file output, we emulate it.
-        const manifestData = document.getElementById('manifest-data').textContent;
-        const manifestBlob = new Blob([manifestData], {type: 'application/json'});
-        const manifestUrl = URL.createObjectURL(manifestBlob);
-        document.querySelector('link[rel="manifest"]').setAttribute('href', manifestUrl);
-    </script>
-</head>
-<body>
-    <div id="root"></div>
+};
 
-    <script type="text/babel">
-        // --- ICON COMPONENTS (Simplified Inline SVGs) ---
-        const Icon = ({ size = 20, className = '', children }) => (
-            <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
-                {children}
-            </svg>
-        );
+// Main App Component
+export default function App() {
+    // --- AUTHENTICATION & PERSISTENCE STATE ---
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [currentUser, setCurrentUser] = useState(null);
+    const [users, setUsers] = useState({});
+    const [loginForm, setLoginForm] = useState({ username: '', password: '' });
+    const [isSignup, setIsSignup] = useState(false);
+    const [loginError, setLoginError] = useState('');
 
-        const Calculator = (props) => (
-            <Icon {...props}><rect x="3" y="4" width="18" height="18" rx="2" ry="2" /><line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" /><line x1="3" y1="10" x2="21" y2="10" /></Icon>
-        );
-        const Beaker = (props) => (
-            <Icon {...props}><path d="M4.5 3L20 21.5" /><path d="M4.5 3L20 21.5" /><path d="M6 3l11 11" /><path d="M8 3l11 11" /><line x1="10" y1="5" x2="14" y2="9" /></Icon>
-        );
-        const Heart = (props) => (
-            <Icon {...props}><path d="M19 14c1.49-1.49 1.49-3.41 0-4.9l-6.4-6.4c-1.49-1.49-3.91-1.49-5.4 0l-6.4 6.4c-1.49 1.49-1.49 3.91 0 5.4l6.4 6.4c1.49 1.49 3.91 1.49 5.4 0l6.4-6.4z" /></Icon>
-        );
-        const Globe = (props) => (
-            <Icon {...props}><circle cx="12" cy="12" r="10" /><line x1="2" y1="12" x2="22" y2="12" /><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" /></Icon>
-        );
-        const BookOpen = (props) => (
-            <Icon {...props}><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" /><path d="M6.5 2H20v20h-4.5a2.5 2.5 0 0 0-5 0H4V4.5A2.5 2.5 0 0 1 6.5 2z" /></Icon>
-        );
-        const Brain = (props) => (
-            <Icon {...props}><path d="M12 2c2.76 0 5 2.24 5 5s-2.24 5-5 5-5-2.24-5-5 2.24-5 5-5z" /><path d="M12 12c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5z" /></Icon>
-        );
-        const Home = (props) => (
-            <Icon {...props}><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /><polyline points="9 22 9 12 15 12 15 22" /></Icon>
-        );
-        const BarChart3 = (props) => (
-            <Icon {...props}><line x1="12" y1="20" x2="12" y2="10" /><line x1="18" y1="20" x2="18" y2="4" /><line x1="6" y1="20" x2="6" y2="16" /></Icon>
-        );
-        const Trophy = (props) => (
-            <Icon {...props}><path d="M19 14c1.49 0 2-1.49 2-2s-.51-2-2-2h-1c-1.1 0-2 .9-2 2v2" /><path d="M5 14c-1.49 0-2-1.49-2-2s.51-2 2-2h1c1.1 0 2 .9 2 2v2" /><path d="M12 20v-2" /><path d="M12 18a7 7 0 0 0 7-7V6a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v5a7 7 0 0 0 7 7z" /></Icon>
-        );
-        const Clock = (props) => (
-            <Icon {...props}><circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" /></Icon>
-        );
-        const CheckCircle = (props) => (
-            <Icon {...props}><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><polyline points="22 4 12 14.01 9 11.01" /></Icon>
-        );
-        const XCircle = (props) => (
-            <Icon {...props}><circle cx="12" cy="12" r="10" /><line x1="15" y1="9" x2="9" y2="15" /><line x1="9" y1="9" x2="15" y2="15" /></Icon>
-        );
-        const SkipForward = (props) => (
-            <Icon {...props}><polygon points="5 4 15 12 5 20 5 4" /><line x1="19" y1="5" x2="19" y2="19" /></Icon>
-        );
-        const User = (props) => (
-            <Icon {...props}><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" /></Icon>
-        );
-        const LogOut = (props) => (
-            <Icon {...props}><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" /><polyline points="16 17 21 12 16 7" /><line x1="21" y1="12" x2="9" y2="12" /></Icon>
-        );
-        const LogIn = (props) => (
-            <Icon {...props}><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" /><polyline points="10 17 15 12 10 7" /><line x1="15" y1="12" x2="3" y2="12" /></Icon>
-        );
-        const ChevronLeft = (props) => (
-            <Icon {...props}><polyline points="15 18 9 12 15 6" /></Icon>
-        );
+    // --- QUIZ STATE ---
+    const [screen, setScreen] = useState('home');
+    const [selectedSubject, setSelectedSubject] = useState(null);
+    const [selectedChapter, setSelectedChapter] = useState(null);
+    const [currentQuestion, setCurrentQuestion] = useState(0);
+    const [score, setScore] = useState(0);
+    const [selectedAnswer, setSelectedAnswer] = useState(null);
+    const [showFeedback, setShowFeedback] = useState(false);
+    const [skippedQuestions, setSkippedQuestions] = useState([]);
+    const [answeredQuestions, setAnsweredQuestions] = useState([]);
+    const [progress, setProgress] = useState({});
+    const [timeSpent, setTimeSpent] = useState(0);
+    const [quizStartTime, setQuizStartTime] = useState(null);
+    const [quizQuestions, setQuizQuestions] = useState([]);
 
-
-        // --- QUIZ DATA STRUCTURE ---
-        const quizData = {
-            math: {
-                name: "Mathematics",
-                icon: Calculator,
-                color: "from-blue-500 to-blue-600",
-                chapters: {
-                    algebra: {
-                        name: "Algebra",
-                        questions: [
-                            { q: "What is the value of x in: 2x + 5 = 15?", options: ["5", "10", "7", "8"], correct: 0 },
-                            { q: "Solve for y: 3y - 7 = 14", options: ["7", "5", "9", "6"], correct: 0 },
-                            { q: "What is the coefficient of x in: 5x + 3?", options: ["5", "3", "8", "x"], correct: 0 },
-                            { q: "Simplify: 2(x + 3) = ?", options: ["2x + 6", "2x + 3", "x + 6", "2x + 9"], correct: 0 },
-                            { q: "If x = 4, what is 3x + 2?", options: ["14", "12", "10", "16"], correct: 0 },
-                            { q: "What is x² when x = 5?", options: ["25", "10", "20", "15"], correct: 0 },
-                            { q: "Solve: x/4 = 3", options: ["12", "7", "4", "16"], correct: 0 },
-                            { q: "What is the value of 2x when x = 8?", options: ["16", "10", "18", "14"], correct: 0 },
-                            { q: "Solve: 4x - 12 = 0", options: ["3", "4", "2", "1"], correct: 0 },
-                            { q: "If 5x = 35, then x = ?", options: ["7", "5", "8", "6"], correct: 0 },
-                            { q: "What is x in: x + 15 = 30?", options: ["15", "10", "20", "25"], correct: 0 }
-                        ]
-                    },
-                    geometry: {
-                        name: "Geometry",
-                        questions: [
-                            { q: "Area of circle with radius 7 cm? (π = 22/7)", options: ["154 cm²", "144 cm²", "164 cm²", "174 cm²"], correct: 0 },
-                            { q: "How many sides does a decagon have?", options: ["10", "8", "12", "9"], correct: 0 },
-                            { q: "Sum of angles in a triangle?", options: ["180°", "360°", "90°", "270°"], correct: 0 },
-                            { q: "Area of rectangle: length 8cm, width 5cm?", options: ["40 cm²", "13 cm²", "45 cm²", "35 cm²"], correct: 0 },
-                            { q: "Perimeter of square with side 6cm?", options: ["24 cm", "36 cm", "18 cm", "12 cm"], correct: 0 },
-                            { q: "How many faces does a cube have?", options: ["6", "8", "12", "4"], correct: 0 },
-                            { q: "What is the diameter of a circle with radius 10cm?", options: ["20 cm", "10 cm", "30 cm", "5 cm"], correct: 0 },
-                            { q: "Volume of cube with side 3cm?", options: ["27 cm³", "9 cm³", "12 cm³", "18 cm³"], correct: 0 },
-                            { q: "Area of triangle: base 10cm, height 6cm?", options: ["30 cm²", "60 cm²", "16 cm²", "20 cm²"], correct: 0 },
-                            { q: "How many edges does a cube have?", options: ["12", "8", "6", "10"], correct: 0 },
-                            { q: "Circumference of circle with radius 7cm? (π=22/7)", options: ["44 cm", "154 cm", "28 cm", "88 cm"], correct: 0 }
-                        ]
-                    },
-                    numbers: {
-                        name: "Numbers & Operations",
-                        questions: [
-                            { q: "What is the cube root of 729?", options: ["9", "8", "7", "6"], correct: 0 },
-                            { q: "LCM of 12 and 18?", options: ["36", "24", "54", "72"], correct: 0 },
-                            { q: "HCF of 24 and 36?", options: ["12", "6", "18", "24"], correct: 0 },
-                            { q: "What is 15% of 200?", options: ["30", "25", "35", "40"], correct: 0 },
-                            { q: "Square of 13?", options: ["169", "144", "196", "121"], correct: 0 },
-                            { q: "What is $2^3 \\times 2^2$?", options: ["32", "16", "64", "8"], correct: 0 },
-                            { q: "Convert 0.75 to fraction", options: ["3/4", "2/3", "4/5", "1/2"], correct: 0 },
-                            { q: "What is 20% of 150?", options: ["30", "25", "35", "20"], correct: 0 },
-                            { q: "Find the average of 10, 20, 30, 40", options: ["25", "20", "30", "15"], correct: 0 },
-                            { q: "What is $3^4$?", options: ["81", "64", "27", "12"], correct: 0 },
-                            { q: "Simplify: $48 \\div 6 + 2$", options: ["10", "8", "12", "6"], correct: 0 }
-                        ]
-                    }
-                }
-            },
-            science: {
-                name: "Science",
-                icon: Beaker,
-                color: "from-green-500 to-green-600",
-                chapters: {
-                    biology: {
-                        name: "Biology - Cell Structure",
-                        questions: [
-                            { q: "What is the powerhouse of the cell?", options: ["Mitochondria", "Nucleus", "Ribosome", "Chloroplast"], correct: 0 },
-                            { q: "Which organelle controls cell activities?", options: ["Nucleus", "Mitochondria", "Cell membrane", "Cytoplasm"], correct: 0 },
-                            { q: "What gives plants their green color?", options: ["Chlorophyll", "Carotene", "Xanthophyll", "Anthocyanin"], correct: 0 },
-                            { q: "Cell wall is found in?", options: ["Plants", "Animals", "Humans", "Bacteria only"], correct: 0 },
-                            { q: "What is the basic unit of life?", options: ["Cell", "Tissue", "Organ", "Atom"], correct: 0 },
-                            { q: "Which organelle helps in protein synthesis?", options: ["Ribosome", "Lysosome", "Vacuole", "Golgi body"], correct: 0 },
-                            { q: "What is the jelly-like substance in cells?", options: ["Cytoplasm", "Nucleoplasm", "Protoplasm", "Plasma"], correct: 0 },
-                            { q: "Lysosomes are known as?", options: ["Suicide bags", "Power house", "Control center", "Storage units"], correct: 0 }
-                        ]
-                    },
-                    chemistry: {
-                        name: "Chemistry - Elements & Compounds",
-                        questions: [
-                            { q: "Chemical formula for water?", options: ["$H_2O$", "$CO_2$", "$NaCl$", "$O_2$"], correct: 0 },
-                            { q: "Which gas do plants absorb?", options: ["Carbon Dioxide", "Oxygen", "Nitrogen", "Hydrogen"], correct: 0 },
-                            { q: "Symbol for Gold?", options: ["Au", "Ag", "Fe", "Cu"], correct: 0 },
-                            { q: "Common salt is?", options: ["NaCl", "KCl", "CaCl2", "MgCl2"], correct: 0 },
-                            { q: "Atomic number of Carbon?", options: ["6", "12", "8", "14"], correct: 0 },
-                            { q: "pH of pure water?", options: ["7", "0", "14", "10"], correct: 0 },
-                            { q: "What is the symbol for Iron?", options: ["Fe", "Ir", "In", "I"], correct: 0 },
-                            { q: "Which gas is needed for burning?", options: ["Oxygen", "Nitrogen", "Carbon dioxide", "Helium"], correct: 0 }
-                        ]
-                    },
-                    physics: {
-                        name: "Physics - Force & Motion",
-                        questions: [
-                            { q: "Unit of force?", options: ["Newton", "Joule", "Watt", "Pascal"], correct: 0 },
-                            { q: "Speed of light?", options: ["$3 \\times 10^8 m/s$", "$3 \\times 10^6 m/s$", "$3 \\times 10^7 m/s$", "$3 \\times 10^9 m/s$"], correct: 0 },
-                            { q: "SI unit of pressure?", options: ["Pascal", "Newton", "Bar", "Atmosphere"], correct: 0 },
-                            { q: "Formula for speed?", options: ["Distance/Time", "Time/Distance", "Distance x Time", "Force x Time"], correct: 0 },
-                            { q: "Acceleration due to gravity?", options: ["$9.8 m/s^2$", "$10 m/s^2$", "$8.9 m/s^2$", "$9 m/s^2$"], correct: 0 },
-                            { q: "1 Newton equals?", options: ["$1 kg \\cdot m/s^2$", "$1 kg \\cdot m$", "$1 kg/s^2$", "$1 m/s^2$"], correct: 0 },
-                            { q: "What is inertia?", options: ["Resistance to motion", "Force applied", "Speed of object", "Mass of object"], correct: 0 },
-                            { q: "Friction is a?", options: ["Contact force", "Non-contact force", "Magnetic force", "Gravitational force"], correct: 0 }
-                        ]
-                    }
-                }
-            },
-            health: {
-                name: "Health & PE",
-                icon: Heart,
-                color: "from-red-500 to-red-600",
-                chapters: {
-                    humanbody: {
-                        name: "Human Body Organization",
-                        questions: [
-                            { q: "What is considered the basic unit of life in the human body?", options: ["Organ", "Tissue", "Cell", "Organ System"], correct: 2 },
-                            { q: "The human body is described as a multicellular organism. What does 'multicellular' primarily mean?", options: ["Having only one cell", "Having many different colors", "Having many cells", "Having many systems"], correct: 2 },
-                            { q: "In the hierarchy of organization, what level comes directly after cells?", options: ["Organ systems", "Organs", "Homeostasis", "Tissues"], correct: 3 },
-                            { q: "A collection of similar tissues working together forms what level of organization?", options: ["A cell", "An organ", "An external world", "A basic unit"], correct: 1 },
-                            { q: "What is the highest level of structural organization mentioned, which is made up of a collection of organs?", options: ["Organ systems", "Tissues", "Homeostasis", "Multicellular"], correct: 0 },
-                            { q: "The arrangement of structures from cells to tissues to organs and organ systems is called a remarkable:", options: ["Simple structure", "Life function", "Hierarchy of organization", "External world"], correct: 2 },
-                            { q: "The human body maintains a stable internal environment through a process called:", options: ["Coordination", "Complexity", "Homeostasis", "Integration"], correct: 2 },
-                            { q: "Organ systems work in an integrated and coordinated manner to perform essential:", options: ["External interactions", "Life functions", "Single-cell tasks", "Stable environments"], correct: 1 },
-                            { q: "What is the function of homeostasis?", options: ["To break down food", "To interact with the external world", "To make the body complex", "To maintain a stable internal environment"], correct: 3 },
-                            { q: "Which characteristic describes the human body?", options: ["Simple and unicellular", "Complex and multicellular", "Basic unit of life", "A stable external world"], correct: 1 },
-                            { q: "What is the structural level that is a collection of organ systems?", options: ["The basic unit", "The human organism", "The tissue", "The organ"], correct: 1 },
-                            { q: "Which level of organization is found directly before the Organ System level?", options: ["Cells", "Tissues", "Organs", "The external world"], correct: 2 },
-                            { q: "The main role of organ systems is to allow interaction with what?", options: ["The internal environment", "The stable internal body", "The complex structure", "The external world"], correct: 3 },
-                            { q: "Which term means working together in a smooth and combined way?", options: ["Multicellular", "Basic unit", "Integrated and coordinated", "Hierarchy of organization"], correct: 2 },
-                            { q: "What does the word 'basic' refer to in the phrase 'basic unit of life'?", options: ["The most complex", "The most important start", "The final stage", "The combined function"], correct: 1 },
-                            { q: "Which is the correct order of organization from smallest to largest?", options: ["Organ System → Organ → Tissue → Cell", "Cell → Organ System → Tissue → Organ", "Cell → Tissue → Organ → Organ System", "Organ → Cell → Tissue → Organ System"], correct: 2 },
-                            { q: "What do organ systems aim to keep stable?", options: ["The complexity of the body", "The internal environment", "The external world", "The hierarchy of organization"], correct: 1 },
-                            { q: "The description states the body is a collection of organ systems. What does 'collection' imply?", options: ["They work separately", "They are all gathered together", "They are only one unit", "They only break down"], correct: 1 },
-                            { q: "Which term from the text refers to a group of similar cells working together?", options: ["Organ", "Tissue", "Cell", "Homeostasis"], correct: 1 },
-                            { q: "Besides maintaining homeostasis, what else do organ systems do?", options: ["Only define the basic unit", "Perform essential life functions", "Stop all coordination", "Only form tissues"], correct: 1 }
-                        ]
-                    },
-                    nutrition: {
-                        name: "Nutrition & Diet",
-                        questions: [
-                            { q: "Primary source of energy?", options: ["Carbohydrates", "Proteins", "Fats", "Vitamins"], correct: 0 },
-                            { q: "Vitamin produced by sunlight?", options: ["Vitamin D", "Vitamin C", "Vitamin A", "Vitamin B12"], correct: 0 },
-                            { q: "Daily water intake for teens?", options: ["8-10 glasses", "3-4 glasses", "5-6 glasses", "15-20 glasses"], correct: 0 },
-                            { q: "Which vitamin helps in blood clotting?", options: ["Vitamin K", "Vitamin C", "Vitamin D", "Vitamin E"], correct: 0 },
-                            { q: "Protein-rich food?", options: ["Eggs", "Rice", "Bread", "Apple"], correct: 0 },
-                            { q: "Deficiency of Vitamin C causes?", options: ["Scurvy", "Rickets", "Anemia", "Goiter"], correct: 0 },
-                            { q: "Which mineral is important for bones?", options: ["Calcium", "Iron", "Sodium", "Potassium"], correct: 0 },
-                            { q: "Fiber-rich foods help in?", options: ["Digestion", "Blood clotting", "Vision", "Hair growth"], correct: 0 }
-                        ]
-                    },
-                    fitness: {
-                        name: "Physical Fitness",
-                        questions: [
-                            { q: "Exercise frequency per week?", options: ["3-5 times", "Once a week", "Every day", "Only weekends"], correct: 0 },
-                            { q: "Sleep hours for teenagers?", options: ["8-10 hours", "5-6 hours", "6-7 hours", "11-12 hours"], correct: 0 },
-                            { q: "Best time to drink water during exercise?", options: ["Before, during, after", "Only after", "Only before", "Only during"], correct: 0 },
-                            { q: "What does BMI stand for?", options: ["Body Mass Index", "Body Muscle Index", "Body Metabolism Index", "Bone Mass Index"], correct: 0 },
-                            { q: "Warm-up exercises help?", options: ["Prevent injuries", "Build muscle", "Lose weight", "Increase height"], correct: 0 },
-                            { q: "Aerobic exercise improves?", options: ["Heart health", "Flexibility", "Muscle size", "Bone density"], correct: 0 },
-                            { q: "Stretching improves?", options: ["Flexibility", "Strength", "Speed", "Endurance"], correct: 0 },
-                            { q: "Cooldown after exercise helps?", options: ["Reduce muscle soreness", "Burn more calories", "Build strength", "Increase speed"], correct: 0 }
-                        ]
-                    }
-                }
-            },
-            geography: {
-                name: "Geography",
-                icon: Globe,
-                color: "from-purple-500 to-purple-600",
-                chapters: {
-                    physical: {
-                        name: "Physical Geography",
-                        questions: [
-                            { q: "Largest continent by area?", options: ["Asia", "Africa", "North America", "Europe"], correct: 0 },
-                            { q: "Longest river in the world?", options: ["Nile", "Amazon", "Yangtze", "Mississippi"], correct: 0 },
-                            { q: "Largest ocean?", options: ["Pacific", "Atlantic", "Indian", "Arctic"], correct: 0 },
-                            { q: "Highest mountain peak?", options: ["Mt. Everest", "K2", "Kangchenjunga", "Makalu"], correct: 0 },
-                            { q: "Largest desert?", options: ["Sahara", "Arabian", "Gobi", "Kalahari"], correct: 0 },
-                            { q: "Largest island?", options: ["Greenland", "New Guinea", "Borneo", "Madagascar"], correct: 0 },
-                            { q: "Deepest ocean trench?", options: ["Mariana", "Tonga", "Philippine", "Kermadec"], correct: 0 },
-                            { q: "Longest mountain range?", options: ["Andes", "Himalayas", "Rockies", "Alps"], correct: 0 }
-                        ]
-                    },
-                    political: {
-                        name: "Political Geography",
-                        questions: [
-                            { q: "Capital of Australia?", options: ["Canberra", "Sydney", "Melbourne", "Brisbane"], correct: 0 },
-                            { q: "Number of continents?", options: ["7", "5", "6", "8"], correct: 0 },
-                            { q: "Largest country by area?", options: ["Russia", "Canada", "China", "USA"], correct: 0 },
-                            { q: "Capital of Brazil?", options: ["Brasília", "Rio de Janeiro", "São Paulo", "Salvador"], correct: 0 },
-                            { q: "Which country has most population?", options: ["India", "China", "USA", "Indonesia"], correct: 0 },
-                            { q: "Capital of Egypt?", options: ["Cairo", "Alexandria", "Giza", "Luxor"], correct: 0 },
-                            { q: "Smallest country by area?", options: ["Vatican City", "Monaco", "Nauru", "San Marino"], correct: 0 },
-                            { q: "Capital of Japan?", options: ["Tokyo", "Osaka", "Kyoto", "Hiroshima"], correct: 0 }
-                        ]
-                    }
-                }
-            },
-            english: {
-                name: "English",
-                icon: BookOpen,
-                color: "from-orange-500 to-orange-600",
-                chapters: {
-                    grammar: {
-                        name: "Grammar Basics",
-                        questions: [
-                            { q: "What is a noun?", options: ["Person, place, thing", "Action word", "Describing word", "Connecting word"], correct: 0 },
-                            { q: "Plural of 'child'?", options: ["Children", "Childs", "Childrens", "Childes"], correct: 0 },
-                            { q: "Punctuation for possession?", options: ["Apostrophe (')", "Comma (,)", "Period (.)", "Colon (:)"], correct: 0 },
-                            { q: "What is a verb?", options: ["Action word", "Naming word", "Describing word", "Joining word"], correct: 0 },
-                            { q: "Past tense of 'go'?", options: ["Went", "Gone", "Goed", "Going"], correct: 0 },
-                            { q: "Which is an adjective?", options: ["Beautiful", "Run", "Quickly", "And"], correct: 0 },
-                            { q: "What is a pronoun?", options: ["Replaces noun", "Action word", "Describing word", "Number word"], correct: 0 },
-                            { q: "Plural of 'mouse'?", options: ["Mice", "Mouses", "Meese", "Mices"], correct: 0 }
-                        ]
-                    },
-                    vocabulary: {
-                        name: "Vocabulary & Spellings",
-                        questions: [
-                            { q: "Correct spelling?", options: ["Definitely", "Definately", "Definetly", "Definitly"], correct: 0 },
-                            { q: "Synonym for 'happy'?", options: ["Joyful", "Sad", "Angry", "Tired"], correct: 0 },
-                            { q: "Antonym for 'hot'?", options: ["Cold", "Warm", "Cool", "Tepid"], correct: 0 },
-                            { q: "Meaning of 'abundant'?", options: ["Plentiful", "Scarce", "Empty", "Few"], correct: 0 },
-                            { q: "Correct spelling?", options: ["Necessary", "Neccessary", "Neccesary", "Necesary"], correct: 0 },
-                            { q: "Synonym for 'difficult'?", options: ["Hard", "Easy", "Simple", "Clear"], correct: 0 },
-                            { q: "Meaning of 'enormous'?", options: ["Very large", "Very small", "Medium", "Tiny"], correct: 0 },
-                            { q: "Antonym for 'strong'?", options: ["Weak", "Powerful", "Sturdy", "Tough"], correct: 0 }
-                        ]
-                    }
-                }
-            },
-            history: {
-                name: "History",
-                icon: Brain,
-                color: "from-yellow-500 to-yellow-600",
-                chapters: {
-                    indian: {
-                        name: "Indian History",
-                        questions: [
-                            { q: "India's independence year?", options: ["1947", "1945", "1950", "1942"], correct: 0 },
-                            { q: "Father of the Nation?", options: ["Mahatma Gandhi", "Nehru", "Patel", "Bose"], correct: 0 },
-                            { q: "First PM of India?", options: ["Jawaharlal Nehru", "Lal Bahadur Shastri", "Indira Gandhi", "Rajendra Prasad"], correct: 0 },
-                            { q: "Constitution adopted on?", options: ["26 Jan 1950", "15 Aug 1947", "26 Nov 1949", "2 Oct 1947"], correct: 0 },
-                            { q: "Quit India Movement started in?", options: ["1942", "1940", "1945", "1947"], correct: 0 },
-                            { q: "Who wrote National Anthem?", options: ["Rabindranath Tagore", "Bankim Chandra", "Sarojini Naidu", "Subhas Bose"], correct: 0 },
-                            { q: "Iron Man of India?", options: ["Sardar Patel", "Bhagat Singh", "Lal Bahadur Shastri", "B.R. Ambedkar"], correct: 0 },
-                            { q: "First President of India?", options: ["Rajendra Prasad", "S. Radhakrishnan", "Zakir Husain", "APJ Abdul Kalam"], correct: 0 }
-                        ]
-                    },
-                    world: {
-                        name: "World History",
-                        questions: [
-                            { q: "First US President?", options: ["George Washington", "Thomas Jefferson", "Abraham Lincoln", "John Adams"], correct: 0 },
-                            { q: "World War II ended in?", options: ["1945", "1944", "1946", "1943"], correct: 0 },
-                            { q: "Who invented telephone?", options: ["Alexander Graham Bell", "Thomas Edison", "Nikola Tesla", "Benjamin Franklin"], correct: 0 },
-                            { q: "Pyramids built by?", options: ["Egyptians", "Romans", "Greeks", "Mayans"], correct: 0 },
-                            { q: "French Revolution year?", options: ["1789", "1776", "1799", "1804"], correct: 0 },
-                            { q: "Columbus discovered America in?", options: ["1492", "1500", "1488", "1498"], correct: 0 },
-                            { q: "First man on moon?", options: ["Neil Armstrong", "Buzz Aldrin", "Yuri Gagarin", "John Glenn"], correct: 0 },
-                            { q: "World War I started in?", options: ["1914", "1918", "1910", "1920"], correct: 0 }
-                        ]
-                    }
+    // Load users and check login on mount
+    useEffect(() => {
+        try {
+            const savedUsers = localStorage.getItem('quizAppUsers');
+            if (savedUsers) {
+                setUsers(JSON.parse(savedUsers));
+            }
+            
+            const savedLogin = localStorage.getItem('quizAppCurrentUser');
+            if (savedLogin) {
+                const user = JSON.parse(savedLogin);
+                setCurrentUser(user);
+                setIsLoggedIn(true);
+                // Load user's progress
+                const userProgress = localStorage.getItem(`quizAppProgress_${user.username}`);
+                if (userProgress) {
+                    setProgress(JSON.parse(userProgress));
                 }
             }
+        } catch (error) {
+            console.error('Error loading user data:', error);
+        }
+    }, []);
+
+    // Save progress whenever it changes
+    useEffect(() => {
+        if (currentUser && isLoggedIn && Object.keys(progress).length > 0) {
+            try {
+                localStorage.setItem(`quizAppProgress_${currentUser.username}`, JSON.stringify(progress));
+            } catch (error) {
+                console.error('Error saving progress:', error);
+            }
+        }
+    }, [progress, currentUser, isLoggedIn]);
+
+    // Timer effect
+    useEffect(() => {
+        let interval;
+        if (screen === 'quiz' && quizStartTime) {
+            interval = setInterval(() => {
+                setTimeSpent(Math.floor((Date.now() - quizStartTime) / 1000));
+            }, 1000);
+        }
+        return () => clearInterval(interval);
+    }, [screen, quizStartTime]);
+
+    // --- AUTH HANDLERS ---
+    const handleLogin = (e) => {
+        e.preventDefault();
+        setLoginError('');
+
+        const username = loginForm.username.trim();
+        const password = loginForm.password.trim();
+
+        if (!username || !password) {
+            setLoginError('Please enter both username and password');
+            return;
+        }
+
+        if (isSignup) {
+            // Sign up
+            if (users[username]) {
+                setLoginError('Username already exists');
+                return;
+            }
+            if (username.length < 3) {
+                setLoginError('Username must be at least 3 characters');
+                return;
+            }
+            if (password.length < 4) {
+                setLoginError('Password must be at least 4 characters');
+                return;
+            }
+
+            try {
+                const newUsers = {
+                    ...users,
+                    [username]: { password: password }
+                };
+                setUsers(newUsers);
+                localStorage.setItem('quizAppUsers', JSON.stringify(newUsers));
+
+                const user = { username: username };
+                setCurrentUser(user);
+                setIsLoggedIn(true);
+                localStorage.setItem('quizAppCurrentUser', JSON.stringify(user));
+                setLoginForm({ username: '', password: '' });
+                setProgress({});
+                setScreen('home');
+            } catch (error) {
+                setLoginError('Error creating account. Please try again.');
+                console.error('Signup error:', error);
+            }
+        } else {
+            // Login
+            if (!users[username]) {
+                setLoginError('Username not found');
+                return;
+            }
+            if (users[username].password !== password) {
+                setLoginError('Incorrect password');
+                return;
+            }
+
+            try {
+                const user = { username: username };
+                setCurrentUser(user);
+                setIsLoggedIn(true);
+                localStorage.setItem('quizAppCurrentUser', JSON.stringify(user));
+                
+                // Load user's progress
+                const userProgress = localStorage.getItem(`quizAppProgress_${username}`);
+                if (userProgress) {
+                    setProgress(JSON.parse(userProgress));
+                } else {
+                    setProgress({});
+                }
+                
+                setLoginForm({ username: '', password: '' });
+                setScreen('home');
+            } catch (error) {
+                setLoginError('Error logging in. Please try again.');
+                console.error('Login error:', error);
+            }
+        }
+    };
+
+    const handleLogout = () => {
+        try {
+            setIsLoggedIn(false);
+            setCurrentUser(null);
+            setProgress({});
+            localStorage.removeItem('quizAppCurrentUser');
+            setScreen('home');
+            setLoginForm({ username: '', password: '' });
+            setLoginError('');
+        } catch (error) {
+            console.error('Logout error:', error);
+        }
+    };
+
+    // --- QUIZ HANDLERS ---
+
+    const startQuiz = (subjectKey, chapterKey) => {
+        setSelectedSubject(subjectKey);
+        setSelectedChapter(chapterKey);
+        
+        const questions = quizData[subjectKey].chapters[chapterKey].questions;
+        setQuizQuestions(questions);
+
+        setCurrentQuestion(0);
+        setScore(0);
+        setSelectedAnswer(null);
+        setShowFeedback(false);
+        setSkippedQuestions([]);
+        setAnsweredQuestions([]);
+        setTimeSpent(0);
+        setQuizStartTime(Date.now());
+        setScreen('quiz');
+    };
+
+    const handleAnswer = (index) => {
+        if (showFeedback) return;
+        
+        setSelectedAnswer(index);
+        setShowFeedback(true);
+        
+        const currentQ = quizQuestions[currentQuestion];
+        const isCorrect = index === currentQ.correct;
+        
+        if (isCorrect) {
+            setScore(score + 1);
+        }
+        
+        setAnsweredQuestions([...answeredQuestions, {
+            questionIndex: currentQuestion,
+            correct: isCorrect,
+            selectedOption: index
+        }]);
+    };
+
+    const skipQuestion = () => {
+        if (showFeedback) return; // Prevent skipping twice quickly
+        setSkippedQuestions([...skippedQuestions, currentQuestion]);
+        setAnsweredQuestions([...answeredQuestions, {
+            questionIndex: currentQuestion,
+            correct: false, // Mark skipped as incorrect for progress tracking
+            selectedOption: -1 // -1 indicates skipped
+        }]);
+        nextQuestion();
+    };
+
+    const nextQuestion = () => {
+        const totalQuestions = quizQuestions.length;
+        
+        if (currentQuestion < totalQuestions - 1) {
+            setCurrentQuestion(currentQuestion + 1);
+            setSelectedAnswer(null);
+            setShowFeedback(false);
+        } else {
+            updateProgress();
+            setScreen('result');
+        }
+    };
+
+    const updateProgress = () => {
+        if (!selectedSubject || !selectedChapter) return;
+
+        const key = `${selectedSubject}-${selectedChapter}`;
+        const totalQuestions = quizQuestions.length;
+        const percentage = (score / totalQuestions) * 100;
+        
+        const currentData = progress[key] || {
+            score: 0,
+            total: totalQuestions,
+            percentage: 0,
+            timestamp: new Date().toLocaleDateString()
         };
 
-        // Main App Component
-        function App() {
-            const { useState, useEffect } = React;
-            
-            // --- AUTHENTICATION & PERSISTENCE STATE ---
-            const [isLoggedIn, setIsLoggedIn] = useState(false);
-            const [currentUser, setCurrentUser] = useState(null);
-            const [users, setUsers] = useState({});
-            const [loginForm, setLoginForm] = useState({ username: '', password: '' });
-            const [isSignup, setIsSignup] = useState(false);
-            const [loginError, setLoginError] = useState('');
-
-            // --- QUIZ STATE ---
-            const [screen, setScreen] = useState('home');
-            const [selectedSubject, setSelectedSubject] = useState(null);
-            const [selectedChapter, setSelectedChapter] = useState(null);
-            const [currentQuestion, setCurrentQuestion] = useState(0);
-            const [score, setScore] = useState(0);
-            const [selectedAnswer, setSelectedAnswer] = useState(null);
-            const [showFeedback, setShowFeedback] = useState(false);
-            const [skippedQuestions, setSkippedQuestions] = useState([]);
-            const [answeredQuestions, setAnsweredQuestions] = useState([]);
-            const [progress, setProgress] = useState({});
-            const [timeSpent, setTimeSpent] = useState(0);
-            const [quizStartTime, setQuizStartTime] = useState(null);
-            const [quizQuestions, setQuizQuestions] = useState([]);
-
-            // Load users and check login on mount
-            useEffect(() => {
-                try {
-                    const savedUsers = localStorage.getItem('quizAppUsers');
-                    if (savedUsers) {
-                        setUsers(JSON.parse(savedUsers));
-                    }
-                    
-                    const savedLogin = localStorage.getItem('quizAppCurrentUser');
-                    if (savedLogin) {
-                        const user = JSON.parse(savedLogin);
-                        setCurrentUser(user);
-                        setIsLoggedIn(true);
-                        // Load user's progress
-                        const userProgress = localStorage.getItem(`quizAppProgress_${user.username}`);
-                        if (userProgress) {
-                            setProgress(JSON.parse(userProgress));
-                        }
-                    }
-                } catch (error) {
-                    console.error('Error loading user data:', error);
-                }
-            }, []);
-
-            // Save progress whenever it changes
-            useEffect(() => {
-                if (currentUser && isLoggedIn && Object.keys(progress).length > 0) {
-                    try {
-                        localStorage.setItem(`quizAppProgress_${currentUser.username}`, JSON.stringify(progress));
-                    } catch (error) {
-                        console.error('Error saving progress:', error);
-                    }
-                }
-            }, [progress, currentUser, isLoggedIn]);
-
-            // Timer effect
-            useEffect(() => {
-                let interval;
-                if (screen === 'quiz' && quizStartTime) {
-                    interval = setInterval(() => {
-                        setTimeSpent(Math.floor((Date.now() - quizStartTime) / 1000));
-                    }, 1000);
-                }
-                return () => clearInterval(interval);
-            }, [screen, quizStartTime]);
-
-            // --- AUTH HANDLERS ---
-            const handleLogin = (e) => {
-                e.preventDefault();
-                setLoginError('');
-
-                const username = loginForm.username.trim();
-                const password = loginForm.password.trim();
-
-                if (!username || !password) {
-                    setLoginError('Please enter both username and password');
-                    return;
-                }
-
-                if (isSignup) {
-                    // Sign up
-                    if (users[username]) {
-                        setLoginError('Username already exists');
-                        return;
-                    }
-                    if (username.length < 3) {
-                        setLoginError('Username must be at least 3 characters');
-                        return;
-                    }
-                    if (password.length < 4) {
-                        setLoginError('Password must be at least 4 characters');
-                        return;
-                    }
-
-                    try {
-                        const newUsers = {
-                            ...users,
-                            [username]: { password: password }
-                        };
-                        setUsers(newUsers);
-                        localStorage.setItem('quizAppUsers', JSON.stringify(newUsers));
-
-                        const user = { username: username };
-                        setCurrentUser(user);
-                        setIsLoggedIn(true);
-                        localStorage.setItem('quizAppCurrentUser', JSON.stringify(user));
-                        setLoginForm({ username: '', password: '' });
-                        setProgress({});
-                        setScreen('home');
-                    } catch (error) {
-                        setLoginError('Error creating account. Please try again.');
-                        console.error('Signup error:', error);
-                    }
-                } else {
-                    // Login
-                    if (!users[username]) {
-                        setLoginError('Username not found');
-                        return;
-                    }
-                    if (users[username].password !== password) {
-                        setLoginError('Incorrect password');
-                        return;
-                    }
-
-                    try {
-                        const user = { username: username };
-                        setCurrentUser(user);
-                        setIsLoggedIn(true);
-                        localStorage.setItem('quizAppCurrentUser', JSON.stringify(user));
-                        
-                        // Load user's progress
-                        const userProgress = localStorage.getItem(`quizAppProgress_${username}`);
-                        if (userProgress) {
-                            setProgress(JSON.parse(userProgress));
-                        } else {
-                            setProgress({});
-                        }
-                        
-                        setLoginForm({ username: '', password: '' });
-                        setScreen('home');
-                    } catch (error) {
-                        setLoginError('Error logging in. Please try again.');
-                        console.error('Login error:', error);
-                    }
-                }
-            };
-
-            const handleLogout = () => {
-                try {
-                    setIsLoggedIn(false);
-                    setCurrentUser(null);
-                    setProgress({});
-                    localStorage.removeItem('quizAppCurrentUser');
-                    setScreen('home');
-                    setLoginForm({ username: '', password: '' });
-                    setLoginError('');
-                } catch (error) {
-                    console.error('Logout error:', error);
-                }
-            };
-
-            // --- QUIZ HANDLERS ---
-
-            const startQuiz = (subjectKey, chapterKey) => {
-                setSelectedSubject(subjectKey);
-                setSelectedChapter(chapterKey);
-                
-                const questions = quizData[subjectKey].chapters[chapterKey].questions;
-                setQuizQuestions(questions);
-
-                setCurrentQuestion(0);
-                setScore(0);
-                setSelectedAnswer(null);
-                setShowFeedback(false);
-                setSkippedQuestions([]);
-                setAnsweredQuestions([]);
-                setTimeSpent(0);
-                setQuizStartTime(Date.now());
-                setScreen('quiz');
-            };
-
-            const handleAnswer = (index) => {
-                if (showFeedback) return;
-                
-                setSelectedAnswer(index);
-                setShowFeedback(true);
-                
-                const currentQ = quizQuestions[currentQuestion];
-                const isCorrect = index === currentQ.correct;
-                
-                if (isCorrect) {
-                    setScore(score + 1);
-                }
-                
-                setAnsweredQuestions([...answeredQuestions, {
-                    questionIndex: currentQuestion,
-                    correct: isCorrect,
-                    selectedOption: index
-                }]);
-            };
-
-            const skipQuestion = () => {
-                if (showFeedback) return; // Prevent skipping twice quickly
-                setSkippedQuestions([...skippedQuestions, currentQuestion]);
-                setAnsweredQuestions([...answeredQuestions, {
-                    questionIndex: currentQuestion,
-                    correct: false, // Mark skipped as incorrect for progress tracking
-                    selectedOption: -1 // -1 indicates skipped
-                }]);
-                nextQuestion();
-            };
-
-            const nextQuestion = () => {
-                const totalQuestions = quizQuestions.length;
-                
-                if (currentQuestion < totalQuestions - 1) {
-                    setCurrentQuestion(currentQuestion + 1);
-                    setSelectedAnswer(null);
-                    setShowFeedback(false);
-                } else {
-                    updateProgress();
-                    setScreen('result');
-                }
-            };
-
-            const updateProgress = () => {
-                if (!selectedSubject || !selectedChapter) return;
-
-                const key = `${selectedSubject}-${selectedChapter}`;
-                const totalQuestions = quizQuestions.length;
-                const percentage = (score / totalQuestions) * 100;
-                
-                const currentData = progress[key] || {
-                    score: 0,
+        // Only update if the new score is better
+        if (percentage > currentData.percentage) {
+             setProgress({
+                ...progress,
+                [key]: {
+                    score,
                     total: totalQuestions,
-                    percentage: 0,
+                    percentage: parseFloat(percentage.toFixed(2)),
                     timestamp: new Date().toLocaleDateString()
-                };
-
-                // Only update if the new score is better
-                if (percentage > currentData.percentage) {
-                     setProgress({
-                        ...progress,
-                        [key]: {
-                            score,
-                            total: totalQuestions,
-                            percentage: parseFloat(percentage.toFixed(2)),
-                            timestamp: new Date().toLocaleDateString()
-                        }
-                    });
                 }
-            };
+            });
+        }
+    };
 
-            const formatTime = (seconds) => {
-                const mins = Math.floor(seconds / 60);
-                const secs = seconds % 60;
-                return `${mins}:${secs.toString().padStart(2, '0')}`;
-            };
+    const formatTime = (seconds) => {
+        const mins = Math.floor(seconds / 60);
+        const secs = seconds % 60;
+        return `${mins}:${secs.toString().padStart(2, '0')}`;
+    };
 
-            const navigateToSubject = (subjectKey) => {
-                setSelectedSubject(subjectKey);
-                setSelectedChapter(null);
-                setScreen('subject');
-            };
+    const navigateToSubject = (subjectKey) => {
+        setSelectedSubject(subjectKey);
+        setSelectedChapter(null);
+        setScreen('subject');
+    };
 
-            const restartQuiz = () => {
-                setScreen('home');
-                setSelectedSubject(null);
-                setSelectedChapter(null);
-                setCurrentQuestion(0);
-                setScore(0);
-                setSelectedAnswer(null);
-                setShowFeedback(false);
-                setSkippedQuestions([]);
-                setAnsweredQuestions([]);
-                setTimeSpent(0);
-                setQuizStartTime(null);
-                setQuizQuestions([]);
-            };
+    const restartQuiz = () => {
+        setScreen('home');
+        setSelectedSubject(null);
+        setSelectedChapter(null);
+        setCurrentQuestion(0);
+        setScore(0);
+        setSelectedAnswer(null);
+        setShowFeedback(false);
+        setSkippedQuestions([]);
+        setAnsweredQuestions([]);
+        setTimeSpent(0);
+        setQuizStartTime(null);
+        setQuizQuestions([]);
+    };
 
-            // --- RENDER SCREENS ---
+    // --- RENDER SCREENS ---
 
-            // 1. Login/Signup Screen
-            if (!isLoggedIn) {
-                return (
-                    <div className="min-h-screen bg-gradient-to-br from-indigo-100 via-purple-50 to-pink-100 flex items-center justify-center p-4 font-sans">
-                        <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-8 transform hover:scale-[1.01] transition-all duration-300">
-                            <div className="text-center mb-8">
-                                <div className="bg-gradient-to-r from-indigo-500 to-purple-500 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
-                                    <BookOpen size={40} className="text-white" />
-                                </div>
-                                <h1 className="text-3xl font-bold text-gray-800 mb-2">Class 8 Quiz App</h1>
-                                <p className="text-gray-600">
-                                    {isSignup ? 'Create your account to start learning' : 'Login to continue your learning journey'}
-                                </p>
-                            </div>
-
-                            <form onSubmit={handleLogin} className="space-y-4">
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">Username</label>
-                                    <input
-                                        type="text"
-                                        value={loginForm.username}
-                                        onChange={(e) => setLoginForm({...loginForm, username: e.target.value})}
-                                        className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none transition-all"
-                                        placeholder="Enter username"
-                                        required
-                                    />
-                                </div>
-
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">Password</label>
-                                    <input
-                                        type="password"
-                                        value={loginForm.password}
-                                        onChange={(e) => setLoginForm({...loginForm, password: e.target.value})}
-                                        className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none transition-all"
-                                        placeholder="Enter password"
-                                        required
-                                    />
-                                </div>
-
-                                {loginError && (
-                                    <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-xl text-sm">
-                                        {loginError}
-                                    </div>
-                                )}
-
-                                <button
-                                    type="submit"
-                                    className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-3 rounded-xl font-semibold hover:from-indigo-700 hover:to-purple-700 shadow-lg hover:shadow-xl transition-all duration-200 flex items-center justify-center gap-2"
-                                >
-                                    <LogIn size={20} />
-                                    {isSignup ? 'Sign Up' : 'Login'}
-                                </button>
-                            </form>
-
-                            <div className="mt-6 text-center">
-                                <button
-                                    onClick={() => {
-                                        setIsSignup(!isSignup);
-                                        setLoginError('');
-                                        setLoginForm({ username: '', password: '' });
-                                    }}
-                                    className="text-indigo-600 hover:text-indigo-800 font-medium text-sm transition-colors"
-                                >
-                                    {isSignup ? 'Already have an account? Login' : "Don't have an account? Sign Up"}
-                                </button>
-                            </div>
+    // 1. Login/Signup Screen
+    if (!isLoggedIn) {
+        return (
+            <div className="min-h-screen bg-gradient-to-br from-indigo-100 via-purple-50 to-pink-100 flex items-center justify-center p-4 font-sans">
+                <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-8 transform hover:scale-[1.01] transition-all duration-300">
+                    <div className="text-center mb-8">
+                        <div className="bg-gradient-to-r from-indigo-500 to-purple-500 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
+                            <BookOpen size={40} className="text-white" />
                         </div>
+                        <h1 className="text-3xl font-bold text-gray-800 mb-2">Class 8 Quiz App</h1>
+                        <p className="text-gray-600">
+                            {isSignup ? 'Create your account to start learning' : 'Login to continue your learning journey'}
+                        </p>
                     </div>
-                );
-            }
 
-            // --- HOME SCREEN ---
-            if (screen === 'home') {
-                const totalChapters = Object.values(quizData).reduce((acc, subj) => acc + Object.keys(subj.chapters).length, 0);
-                const completedChapters = Object.keys(progress).length;
-                const overallProgress = totalChapters > 0 ? (completedChapters / totalChapters) * 100 : 0;
-                
-                const SubjectCard = ({ subjectKey, subject }) => {
-                    const chapterKeys = Object.keys(subject.chapters);
-                    const total = chapterKeys.length;
-                    const completed = chapterKeys.filter(chapKey => progress[`${subjectKey}-${chapKey}`]).length;
-                    const percentage = total > 0 ? (completed / total) * 100 : 0;
-                    const Icon = subject.icon;
+                    <form onSubmit={handleLogin} className="space-y-4">
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">Username</label>
+                            <input
+                                type="text"
+                                value={loginForm.username}
+                                onChange={(e) => setLoginForm({...loginForm, username: e.target.value})}
+                                className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none transition-all"
+                                placeholder="Enter username"
+                                required
+                            />
+                        </div>
 
-                    return (
-                        <div 
-                            onClick={() => navigateToSubject(subjectKey)}
-                            className={`group cursor-pointer bg-white rounded-xl shadow-lg p-6 flex flex-col items-start space-y-4 hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 border-t-4 border-indigo-500`}
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">Password</label>
+                            <input
+                                type="password"
+                                value={loginForm.password}
+                                onChange={(e) => setLoginForm({...loginForm, password: e.target.value})}
+                                className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none transition-all"
+                                placeholder="Enter password"
+                                required
+                            />
+                        </div>
+
+                        {loginError && (
+                            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-xl text-sm">
+                                {loginError}
+                            </div>
+                        )}
+
+                        <button
+                            type="submit"
+                            className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-3 rounded-xl font-semibold hover:from-indigo-700 hover:to-purple-700 shadow-lg hover:shadow-xl transition-all duration-200 flex items-center justify-center gap-2"
                         >
-                            <div className={`p-4 rounded-full bg-gradient-to-r ${subject.color} text-white shadow-md group-hover:scale-105 transition-transform`}>
-                                <Icon size={32} />
-                            </div>
-                            <h2 className="text-xl font-bold text-gray-800">{subject.name}</h2>
-                            <p className="text-sm text-gray-500">{total} Chapters Available</p>
-                            
-                            <div className="w-full">
-                                <div className="flex justify-between text-xs font-semibold mb-1">
-                                    <span className="text-gray-600">Progress</span>
-                                    <span className="text-indigo-600">{percentage.toFixed(0)}%</span>
-                                </div>
-                                <div className="w-full bg-gray-200 rounded-full h-2.5">
-                                    <div 
-                                        className={`h-2.5 rounded-full bg-gradient-to-r ${subject.color}`} 
-                                        style={{ width: `${percentage}%` }}
-                                    ></div>
-                                </div>
-                                <p className="text-xs text-gray-400 mt-1">{completed} / {total} Completed</p>
-                            </div>
-                        </div>
-                    );
-                };
+                            <LogIn size={20} />
+                            {isSignup ? 'Sign Up' : 'Login'}
+                        </button>
+                    </form>
 
-                return (
-                    <div className="min-h-screen bg-gradient-to-br from-indigo-100 via-purple-50 to-pink-100 p-4 font-sans">
-                        <div className="max-w-6xl mx-auto">
-                            {/* User Header */}
-                            <div className="bg-white rounded-xl shadow-lg p-4 mb-6 mt-4 flex items-center justify-between sticky top-4 z-10">
-                                <div className="flex items-center gap-3">
-                                    <div className="bg-indigo-100 p-3 rounded-full">
-                                        <User size={24} className="text-indigo-600" />
-                                    </div>
-                                    <div>
-                                        <p className="text-sm text-gray-600">Welcome back,</p>
-                                        <p className="text-lg font-bold text-gray-800 capitalize">{currentUser?.username}</p>
-                                    </div>
-                                </div>
-                                <button
-                                    onClick={handleLogout}
-                                    className="flex items-center gap-2 px-4 py-2 bg-red-100 text-red-600 rounded-lg font-medium hover:bg-red-200 transition-all text-sm shadow-md hover:shadow-lg"
-                                >
-                                    <LogOut size={18} />
-                                    Logout
-                                </button>
-                            </div>
-
-                            {/* Overall Progress Widget */}
-                            <div className="bg-white rounded-xl shadow-xl p-6 mb-8 border-l-4 border-purple-500">
-                                <div className="flex items-center justify-between mb-4">
-                                    <h2 className="text-2xl font-extrabold text-gray-800 flex items-center gap-2">
-                                        <BarChart3 size={24} className="text-purple-500" />
-                                        Your Learning Dashboard
-                                    </h2>
-                                    <span className="text-3xl font-bold text-purple-600">{overallProgress.toFixed(0)}%</span>
-                                </div>
-                                <div className="w-full bg-purple-200 rounded-full h-3">
-                                    <div 
-                                        className="h-3 rounded-full bg-gradient-to-r from-indigo-500 to-purple-500 shadow-inner" 
-                                        style={{ width: `${overallProgress}%` }}
-                                    ></div>
-                                </div>
-                                <p className="text-sm text-gray-500 mt-2">
-                                    {completedChapters} of {totalChapters} chapters attempted. Keep up the great work!
-                                </p>
-                            </div>
-
-                            {/* Subject Grid */}
-                            <h2 className="text-3xl font-bold text-gray-800 mb-6 border-b pb-2">Select a Subject</h2>
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                                {Object.entries(quizData).map(([key, subject]) => (
-                                    <SubjectCard key={key} subjectKey={key} subject={subject} />
-                                ))}
-                            </div>
-                        </div>
-                    </div>
-                );
-            }
-
-            // --- SUBJECT SCREEN (Chapter Selection) ---
-            if (screen === 'subject') {
-                if (!selectedSubject) {
-                    setScreen('home');
-                    return null;
-                }
-                
-                const subject = quizData[selectedSubject];
-                const Icon = subject.icon;
-                
-                const ChapterCard = ({ chapterKey, chapter }) => {
-                    const key = `${selectedSubject}-${chapterKey}`;
-                    const chapProgress = progress[key];
-                    const percentage = chapProgress ? chapProgress.percentage : 0;
-
-                    return (
-                        <div 
-                            onClick={() => startQuiz(selectedSubject, chapterKey)}
-                            className="cursor-pointer bg-white rounded-xl shadow-md p-5 flex items-center justify-between hover:bg-indigo-50 transition-all duration-200 border-l-4 border-indigo-400"
+                    <div className="mt-6 text-center">
+                        <button
+                            onClick={() => {
+                                setIsSignup(!isSignup);
+                                setLoginError('');
+                                setLoginForm({ username: '', password: '' });
+                            }}
+                            className="text-indigo-600 hover:text-indigo-800 font-medium text-sm transition-colors"
                         >
-                            <div>
-                                <h3 className="text-lg font-semibold text-gray-800">{chapter.name}</h3>
-                                <p className="text-sm text-gray-500">{chapter.questions.length} Questions</p>
-                            </div>
-                            <div className="text-right">
-                                <span className={`inline-block px-3 py-1 text-xs font-bold rounded-full ${
-                                    percentage === 100 ? 'bg-green-100 text-green-700' :
-                                    percentage > 0 ? 'bg-yellow-100 text-yellow-700' : 'bg-gray-100 text-gray-500'
-                                }`}>
-                                    {percentage.toFixed(0)}% Mastered
-                                </span>
-                                {chapProgress && (
-                                     <p className="text-xs text-gray-400 mt-1">Best Score: {chapProgress.score}/{chapProgress.total}</p>
-                                )}
-                            </div>
-                            <button className="p-2 bg-indigo-100 text-indigo-600 rounded-full group-hover:bg-indigo-600 group-hover:text-white transition-colors">
-                                <Trophy size={20} />
-                            </button>
-                        </div>
-                    );
-                };
-
-
-                return (
-                    <div className="min-h-screen bg-gradient-to-br from-indigo-100 via-purple-50 to-pink-100 p-4 font-sans">
-                        <div className="max-w-4xl mx-auto">
-                            <button 
-                                onClick={() => setScreen('home')}
-                                className="flex items-center gap-1 text-indigo-600 hover:text-indigo-800 mb-6 font-medium transition-colors"
-                            >
-                                <ChevronLeft size={20} /> Back to Subjects
-                            </button>
-
-                            <div className={`bg-gradient-to-r ${subject.color} text-white p-6 rounded-xl shadow-xl mb-8 flex items-center gap-4`}>
-                                <Icon size={40} className="p-2 bg-white/20 rounded-xl" />
-                                <div>
-                                    <p className="text-sm opacity-80">Subject</p>
-                                    <h1 className="text-3xl font-bold">{subject.name}</h1>
-                                </div>
-                            </div>
-
-                            <h2 className="text-2xl font-bold text-gray-800 mb-4">Choose a Chapter to Start</h2>
-                            <div className="space-y-4">
-                                {Object.entries(subject.chapters).map(([key, chapter]) => (
-                                    <ChapterCard key={key} chapterKey={key} chapter={chapter} />
-                                ))}
-                            </div>
-                        </div>
+                            {isSignup ? 'Already have an account? Login' : "Don't have an account? Sign Up"}
+                        </button>
                     </div>
-                );
-            }
+                </div>
+            </div>
+        );
+    }
 
-            // --- QUIZ SCREEN ---
-            if (screen === 'quiz') {
-                const currentQ = quizQuestions[currentQuestion];
-                const totalQuestions = quizQuestions.length;
-                const subject = quizData[selectedSubject];
-                const chapter = subject.chapters[selectedChapter];
+    // --- HOME SCREEN ---
+    if (screen === 'home') {
+        const totalChapters = Object.values(quizData).reduce((acc, subj) => acc + Object.keys(subj.chapters).length, 0);
+        const completedChapters = Object.keys(progress).length;
+        const overallProgress = totalChapters > 0 ? (completedChapters / totalChapters) * 100 : 0;
+        
+        const SubjectCard = ({ subjectKey, subject }) => {
+            const chapterKeys = Object.keys(subject.chapters);
+            const total = chapterKeys.length;
+            const completed = chapterKeys.filter(chapKey => progress[`${subjectKey}-${chapKey}`]).length;
+            const percentage = total > 0 ? (completed / total) * 100 : 0;
+            const Icon = subject.icon;
 
-                const isLastQuestion = currentQuestion === totalQuestions - 1;
-
-                if (!currentQ) return <p>Loading...</p>;
-
-                const getOptionClassName = (index) => {
-                    let className = "px-4 py-3 border border-gray-300 rounded-xl transition-all duration-200 cursor-pointer hover:bg-indigo-50 flex items-center justify-between text-left";
+            return (
+                <div 
+                    onClick={() => navigateToSubject(subjectKey)}
+                    className={`group cursor-pointer bg-white rounded-xl shadow-lg p-6 flex flex-col items-start space-y-4 hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 border-t-4 border-indigo-500`}
+                >
+                    <div className={`p-4 rounded-full bg-gradient-to-r ${subject.color} text-white shadow-md group-hover:scale-105 transition-transform`}>
+                        <Icon size={32} />
+                    </div>
+                    <h2 className="text-xl font-bold text-gray-800">{subject.name}</h2>
+                    <p className="text-sm text-gray-500">{total} Chapters Available</p>
                     
-                    if (selectedAnswer !== null) {
-                        const isCorrect = index === currentQ.correct;
-                        const isSelected = index === selectedAnswer;
+                    <div className="w-full">
+                        <div className="flex justify-between text-xs font-semibold mb-1">
+                            <span className="text-gray-600">Progress</span>
+                            <span className="text-indigo-600">{percentage.toFixed(0)}%</span>
+                        </div>
+                        <div className="w-full bg-gray-200 rounded-full h-2.5">
+                            <div 
+                                className={`h-2.5 rounded-full bg-gradient-to-r ${subject.color}`} 
+                                style={{ width: `${percentage}%` }}
+                            ></div>
+                        </div>
+                        <p className="text-xs text-gray-400 mt-1">{completed} / {total} Completed</p>
+                    </div>
+                </div>
+            );
+        };
 
-                        if (showFeedback) {
-                            if (isCorrect) {
-                                className = "px-4 py-3 rounded-xl bg-green-100 border-green-500 ring-2 ring-green-500 text-green-800 font-semibold shadow-md flex items-center justify-between text-left pointer-events-none";
-                            } else if (isSelected && !isCorrect) {
-                                className = "px-4 py-3 rounded-xl bg-red-100 border-red-500 ring-2 ring-red-500 text-red-800 font-semibold shadow-md flex items-center justify-between text-left pointer-events-none";
-                            } else if (index !== selectedAnswer) {
-                                 className += " opacity-60 pointer-events-none";
-                            }
-                        }
-                    } else {
-                         className += " bg-white hover:bg-indigo-50";
+        return (
+            <div className="min-h-screen bg-gradient-to-br from-indigo-100 via-purple-50 to-pink-100 p-4 font-sans">
+                <div className="max-w-6xl mx-auto">
+                    {/* User Header */}
+                    <div className="bg-white rounded-xl shadow-lg p-4 mb-6 mt-4 flex items-center justify-between sticky top-4 z-10">
+                        <div className="flex items-center gap-3">
+                            <div className="bg-indigo-100 p-3 rounded-full">
+                                <User size={24} className="text-indigo-600" />
+                            </div>
+                            <div>
+                                <p className="text-sm text-gray-600">Welcome back,</p>
+                                <p className="text-lg font-bold text-gray-800 capitalize">{currentUser?.username}</p>
+                            </div>
+                        </div>
+                        <button
+                            onClick={handleLogout}
+                            className="flex items-center gap-2 px-4 py-2 bg-red-100 text-red-600 rounded-lg font-medium hover:bg-red-200 transition-all text-sm shadow-md hover:shadow-lg"
+                        >
+                            <LogOut size={18} />
+                            Logout
+                        </button>
+                    </div>
+
+                    {/* Overall Progress Widget */}
+                    <div className="bg-white rounded-xl shadow-xl p-6 mb-8 border-l-4 border-purple-500">
+                        <div className="flex items-center justify-between mb-4">
+                            <h2 className="text-2xl font-extrabold text-gray-800 flex items-center gap-2">
+                                <BarChart3 size={24} className="text-purple-500" />
+                                Your Learning Dashboard
+                            </h2>
+                            <span className="text-3xl font-bold text-purple-600">{overallProgress.toFixed(0)}%</span>
+                        </div>
+                        <div className="w-full bg-purple-200 rounded-full h-3">
+                            <div 
+                                className="h-3 rounded-full bg-gradient-to-r from-indigo-500 to-purple-500 shadow-inner" 
+                                style={{ width: `${overallProgress}%` }}
+                            ></div>
+                        </div>
+                        <p className="text-sm text-gray-500 mt-2">
+                            {completedChapters} of {totalChapters} chapters attempted. Keep up the great work!
+                        </p>
+                    </div>
+
+                    {/* Subject Grid */}
+                    <h2 className="text-3xl font-bold text-gray-800 mb-6 border-b pb-2">Select a Subject</h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {Object.entries(quizData).map(([key, subject]) => (
+                            <SubjectCard key={key} subjectKey={key} subject={subject} />
+                        ))}
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    // --- SUBJECT SCREEN (Chapter Selection) ---
+    if (screen === 'subject') {
+        if (!selectedSubject) {
+            setScreen('home');
+            return null;
+        }
+        
+        const subject = quizData[selectedSubject];
+        const Icon = subject.icon;
+        
+        const ChapterCard = ({ chapterKey, chapter }) => {
+            const key = `${selectedSubject}-${chapterKey}`;
+            const chapProgress = progress[key];
+            const percentage = chapProgress ? chapProgress.percentage : 0;
+
+            return (
+                <div 
+                    onClick={() => startQuiz(selectedSubject, chapterKey)}
+                    className="cursor-pointer bg-white rounded-xl shadow-md p-5 flex items-center justify-between hover:bg-indigo-50 transition-all duration-200 border-l-4 border-indigo-400"
+                >
+                    <div>
+                        <h3 className="text-lg font-semibold text-gray-800">{chapter.name}</h3>
+                        <p className="text-sm text-gray-500">{chapter.questions.length} Questions</p>
+                    </div>
+                    <div className="text-right">
+                        <span className={`inline-block px-3 py-1 text-xs font-bold rounded-full ${
+                            percentage === 100 ? 'bg-green-100 text-green-700' :
+                            percentage > 0 ? 'bg-yellow-100 text-yellow-700' : 'bg-gray-100 text-gray-500'
+                        }`}>
+                            {percentage.toFixed(0)}% Mastered
+                        </span>
+                        {chapProgress && (
+                             <p className="text-xs text-gray-400 mt-1">Best Score: {chapProgress.score}/{chapProgress.total}</p>
+                        )}
+                    </div>
+                    <button className="p-2 bg-indigo-100 text-indigo-600 rounded-full group-hover:bg-indigo-600 group-hover:text-white transition-colors">
+                        <Trophy size={20} />
+                    </button>
+                </div>
+            );
+        };
+
+
+        return (
+            <div className="min-h-screen bg-gradient-to-br from-indigo-100 via-purple-50 to-pink-100 p-4 font-sans">
+                <div className="max-w-4xl mx-auto">
+                    <button 
+                        onClick={() => setScreen('home')}
+                        className="flex items-center gap-1 text-indigo-600 hover:text-indigo-800 mb-6 font-medium transition-colors"
+                    >
+                        <ChevronLeft size={20} /> Back to Subjects
+                    </button>
+
+                    <div className={`bg-gradient-to-r ${subject.color} text-white p-6 rounded-xl shadow-xl mb-8 flex items-center gap-4`}>
+                        <Icon size={40} className="p-2 bg-white/20 rounded-xl" />
+                        <div>
+                            <p className="text-sm opacity-80">Subject</p>
+                            <h1 className="text-3xl font-bold">{subject.name}</h1>
+                        </div>
+                    </div>
+
+                    <h2 className="text-2xl font-bold text-gray-800 mb-4">Choose a Chapter to Start</h2>
+                    <div className="space-y-4">
+                        {Object.entries(subject.chapters).map(([key, chapter]) => (
+                            <ChapterCard key={key} chapterKey={key} chapter={chapter} />
+                        ))}
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    // --- QUIZ SCREEN ---
+    if (screen === 'quiz') {
+        const currentQ = quizQuestions[currentQuestion];
+        const totalQuestions = quizQuestions.length;
+        const subject = quizData[selectedSubject];
+        const chapter = subject.chapters[selectedChapter];
+
+        const isLastQuestion = currentQuestion === totalQuestions - 1;
+
+        if (!currentQ) return <p>Loading...</p>;
+
+        const getOptionClassName = (index) => {
+            let className = "px-4 py-3 border border-gray-300 rounded-xl transition-all duration-200 cursor-pointer hover:bg-indigo-50 flex items-center justify-between text-left";
+            
+            if (selectedAnswer !== null) {
+                const isCorrect = index === currentQ.correct;
+                const isSelected = index === selectedAnswer;
+
+                if (showFeedback) {
+                    if (isCorrect) {
+                        className = "px-4 py-3 rounded-xl bg-green-100 border-green-500 ring-2 ring-green-500 text-green-800 font-semibold shadow-md flex items-center justify-between text-left pointer-events-none";
+                    } else if (isSelected && !isCorrect) {
+                        className = "px-4 py-3 rounded-xl bg-red-100 border-red-500 ring-2 ring-red-500 text-red-800 font-semibold shadow-md flex items-center justify-between text-left pointer-events-none";
+                    } else if (index !== selectedAnswer) {
+                         className += " opacity-60 pointer-events-none";
                     }
-                    return className;
-                };
+                }
+            } else {
+                 className += " bg-white hover:bg-indigo-50";
+            }
+            return className;
+        };
 
-                return (
-                    <div className="min-h-screen bg-gradient-to-br from-indigo-100 via-purple-50 to-pink-100 p-4 font-sans">
-                        <div className="max-w-3xl mx-auto">
-                            <div className="bg-white rounded-xl shadow-xl p-6 mb-6">
-                                
-                                {/* Quiz Header & Timer */}
-                                <div className="flex justify-between items-center mb-6 pb-4 border-b">
-                                    <div>
-                                        <h1 className="text-2xl font-bold text-gray-800">{chapter.name}</h1>
-                                        <p className="text-sm text-gray-500">{subject.name} | Q. {currentQuestion + 1} of {totalQuestions}</p>
-                                    </div>
-                                    <div className="flex items-center gap-2 bg-yellow-100 text-yellow-800 px-4 py-2 rounded-full font-semibold shadow-md">
-                                        <Clock size={20} />
-                                        <span>{formatTime(timeSpent)}</span>
-                                    </div>
-                                </div>
+        return (
+            <div className="min-h-screen bg-gradient-to-br from-indigo-100 via-purple-50 to-pink-100 p-4 font-sans">
+                <div className="max-w-3xl mx-auto">
+                    <div className="bg-white rounded-xl shadow-xl p-6 mb-6">
+                        
+                        {/* Quiz Header & Timer */}
+                        <div className="flex justify-between items-center mb-6 pb-4 border-b">
+                            <div>
+                                <h1 className="text-2xl font-bold text-gray-800">{chapter.name}</h1>
+                                <p className="text-sm text-gray-500">{subject.name} | Q. {currentQuestion + 1} of {totalQuestions}</p>
+                            </div>
+                            <div className="flex items-center gap-2 bg-yellow-100 text-yellow-800 px-4 py-2 rounded-full font-semibold shadow-md">
+                                <Clock size={20} />
+                                <span>{formatTime(timeSpent)}</span>
+                            </div>
+                        </div>
 
-                                {/* Question Progress Bar */}
-                                <div className="mb-6">
-                                    <div className="w-full bg-gray-200 rounded-full h-2">
-                                        <div 
-                                            className="h-2 rounded-full bg-indigo-500 transition-all duration-300"
-                                            style={{ width: `${((currentQuestion + 1) / totalQuestions) * 100}%` }}
-                                        ></div>
-                                    </div>
-                                </div>
+                        {/* Question Progress Bar */}
+                        <div className="mb-6">
+                            <div className="w-full bg-gray-200 rounded-full h-2">
+                                <div 
+                                    className="h-2 rounded-full bg-indigo-500 transition-all duration-300"
+                                    style={{ width: `${((currentQuestion + 1) / totalQuestions) * 100}%` }}
+                                ></div>
+                            </div>
+                        </div>
 
-                                {/* Question Content */}
-                                <p className="text-xl font-medium text-gray-900 mb-6 bg-gray-50 p-4 rounded-lg shadow-inner">
-                                   **Q{currentQuestion + 1}.** {currentQ.q}
-                                </p>
+                        {/* Question Content */}
+                        <p className="text-xl font-medium text-gray-900 mb-6 bg-gray-50 p-4 rounded-lg shadow-inner">
+                           **Q{currentQuestion + 1}.** {currentQ.q}
+                        </p>
 
-                                {/* Options */}
-                                <div className="space-y-3">
-                                    {currentQ.options.map((option, index) => (
-                                        <button
-                                            key={index}
-                                            onClick={() => handleAnswer(index)}
-                                            disabled={showFeedback}
-                                            className={`w-full ${getOptionClassName(index)}`}
-                                        >
-                                            <span className="font-mono text-lg mr-4">{String.fromCharCode(65 + index)}.</span>
-                                            <span className="flex-grow">{option}</span>
-                                            {showFeedback && (
-                                                index === currentQ.correct ? (
-                                                    <CheckCircle size={20} className="text-green-600" />
-                                                ) : index === selectedAnswer ? (
-                                                    <XCircle size={20} className="text-red-600" />
-                                                ) : null
-                                            )}
-                                        </button>
-                                    ))}
-                                </div>
-                                
-                                {/* Navigation Buttons */}
-                                <div className="mt-8 flex justify-between gap-4">
-                                    {!showFeedback ? (
-                                        <button
-                                            onClick={skipQuestion}
-                                            className="flex items-center gap-2 px-6 py-3 bg-yellow-500 text-white rounded-xl font-semibold hover:bg-yellow-600 transition-all shadow-md"
-                                        >
-                                            <SkipForward size={20} />
-                                            Skip Question
-                                        </button>
-                                    ) : (
-                                        <div className="p-3">
-                                            {selectedAnswer === currentQ.correct ? (
-                                                <span className="text-green-600 font-bold text-lg flex items-center gap-2">
-                                                    <CheckCircle size={24}/> Correct Answer!
-                                                </span>
-                                            ) : (
-                                                <span className="text-red-600 font-bold text-lg flex items-center gap-2">
-                                                    <XCircle size={24}/> Incorrect. The correct option was {String.fromCharCode(65 + currentQ.correct)}.
-                                                </span>
-                                            )}
-                                        </div>
+                        {/* Options */}
+                        <div className="space-y-3">
+                            {currentQ.options.map((option, index) => (
+                                <button
+                                    key={index}
+                                    onClick={() => handleAnswer(index)}
+                                    disabled={showFeedback}
+                                    className={`w-full ${getOptionClassName(index)}`}
+                                >
+                                    <span className="font-mono text-lg mr-4">{String.fromCharCode(65 + index)}.</span>
+                                    <span className="flex-grow">{option}</span>
+                                    {showFeedback && (
+                                        index === currentQ.correct ? (
+                                            <CheckCircle size={20} className="text-green-600" />
+                                        ) : index === selectedAnswer ? (
+                                            <XCircle size={20} className="text-red-600" />
+                                        ) : null
                                     )}
-
-                                    <button
-                                        onClick={nextQuestion}
-                                        disabled={!showFeedback}
-                                        className={`flex items-center gap-2 px-6 py-3 rounded-xl font-semibold transition-all shadow-md ${
-                                            showFeedback ? 'bg-indigo-600 text-white hover:bg-indigo-700' : 'bg-gray-300 text-gray-600 cursor-not-allowed'
-                                        }`}
-                                    >
-                                        {isLastQuestion ? 'View Results' : 'Next Question'}
-                                        <ChevronLeft size={20} className="transform rotate-180" />
-                                    </button>
+                                </button>
+                            ))}
+                        </div>
+                        
+                        {/* Navigation Buttons */}
+                        <div className="mt-8 flex justify-between gap-4">
+                            {!showFeedback ? (
+                                <button
+                                    onClick={skipQuestion}
+                                    className="flex items-center gap-2 px-6 py-3 bg-yellow-500 text-white rounded-xl font-semibold hover:bg-yellow-600 transition-all shadow-md"
+                                >
+                                    <SkipForward size={20} />
+                                    Skip Question
+                                </button>
+                            ) : (
+                                <div className="p-3">
+                                    {selectedAnswer === currentQ.correct ? (
+                                        <span className="text-green-600 font-bold text-lg flex items-center gap-2">
+                                            <CheckCircle size={24}/> Correct Answer!
+                                        </span>
+                                    ) : (
+                                        <span className="text-red-600 font-bold text-lg flex items-center gap-2">
+                                            <XCircle size={24}/> Incorrect. The correct option was {String.fromCharCode(65 + currentQ.correct)}.
+                                        </span>
+                                    )}
                                 </div>
+                            )}
+
+                            <button
+                                onClick={nextQuestion}
+                                disabled={!showFeedback}
+                                className={`flex items-center gap-2 px-6 py-3 rounded-xl font-semibold transition-all shadow-md ${
+                                    showFeedback ? 'bg-indigo-600 text-white hover:bg-indigo-700' : 'bg-gray-300 text-gray-600 cursor-not-allowed'
+                                }`}
+                            >
+                                {isLastQuestion ? 'View Results' : 'Next Question'}
+                                <ChevronLeft size={20} className="transform rotate-180" />
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    // --- RESULT SCREEN ---
+    if (screen === 'result') {
+        const totalQuestions = quizQuestions.length;
+        const subject = quizData[selectedSubject];
+        const chapter = subject.chapters[selectedChapter];
+
+        const correctCount = answeredQuestions.filter(a => a.correct).length;
+        const skippedCount = skippedQuestions.length;
+        const percentage = (correctCount / totalQuestions) * 100;
+        const resultMessage = percentage === 100 ? 'Perfect Score!' : percentage >= 75 ? 'Excellent Work!' : percentage >= 50 ? 'Good Effort!' : 'Keep Practicing!';
+
+        return (
+            <div className="min-h-screen bg-gradient-to-br from-indigo-100 via-purple-50 to-pink-100 flex items-center justify-center p-4 font-sans">
+                <div className="max-w-xl w-full bg-white rounded-2xl shadow-2xl p-8 text-center transform scale-100 hover:scale-[1.01] transition-all duration-300">
+                    <div className="mb-6">
+                        <Trophy size={60} className={`mx-auto mb-3 ${
+                            percentage === 100 ? 'text-yellow-500' : percentage >= 75 ? 'text-green-500' : 'text-indigo-500'
+                        }`} />
+                        <h1 className="text-4xl font-extrabold text-gray-800 mb-2">{resultMessage}</h1>
+                        <p className="text-xl text-gray-600">{subject.name}: {chapter.name}</p>
+                    </div>
+
+                    <div className="bg-indigo-50 p-6 rounded-xl mb-6">
+                        <p className="text-5xl font-bold text-indigo-700 mb-4">{percentage.toFixed(0)}%</p>
+                        <div className="grid grid-cols-3 gap-4 text-gray-700 font-medium">
+                            <div>
+                                <p className="text-2xl font-bold text-green-600">{correctCount}</p>
+                                <p className="text-sm">Correct</p>
+                            </div>
+                            <div>
+                                <p className="text-2xl font-bold text-red-600">{totalQuestions - correctCount - skippedCount}</p>
+                                <p className="text-sm">Incorrect</p>
+                            </div>
+                            <div>
+                                <p className="text-2xl font-bold text-yellow-600">{skippedCount}</p>
+                                <p className="text-sm">Skipped</p>
                             </div>
                         </div>
                     </div>
-                );
-            }
 
-            // --- RESULT SCREEN ---
-            if (screen === 'result') {
-                const totalQuestions = quizQuestions.length;
-                const subject = quizData[selectedSubject];
-                const chapter = subject.chapters[selectedChapter];
-
-                const correctCount = answeredQuestions.filter(a => a.correct).length;
-                const skippedCount = skippedQuestions.length;
-                const percentage = (correctCount / totalQuestions) * 100;
-                const resultMessage = percentage === 100 ? 'Perfect Score!' : percentage >= 75 ? 'Excellent Work!' : percentage >= 50 ? 'Good Effort!' : 'Keep Practicing!';
-
-                return (
-                    <div className="min-h-screen bg-gradient-to-br from-indigo-100 via-purple-50 to-pink-100 flex items-center justify-center p-4 font-sans">
-                        <div className="max-w-xl w-full bg-white rounded-2xl shadow-2xl p-8 text-center transform scale-100 hover:scale-[1.01] transition-all duration-300">
-                            <div className="mb-6">
-                                <Trophy size={60} className={`mx-auto mb-3 ${
-                                    percentage === 100 ? 'text-yellow-500' : percentage >= 75 ? 'text-green-500' : 'text-indigo-500'
-                                }`} />
-                                <h1 className="text-4xl font-extrabold text-gray-800 mb-2">{resultMessage}</h1>
-                                <p className="text-xl text-gray-600">{subject.name}: {chapter.name}</p>
-                            </div>
-
-                            <div className="bg-indigo-50 p-6 rounded-xl mb-6">
-                                <p className="text-5xl font-bold text-indigo-700 mb-4">{percentage.toFixed(0)}%</p>
-                                <div className="grid grid-cols-3 gap-4 text-gray-700 font-medium">
-                                    <div>
-                                        <p className="text-2xl font-bold text-green-600">{correctCount}</p>
-                                        <p className="text-sm">Correct</p>
-                                    </div>
-                                    <div>
-                                        <p className="text-2xl font-bold text-red-600">{totalQuestions - correctCount - skippedCount}</p>
-                                        <p className="text-sm">Incorrect</p>
-                                    </div>
-                                    <div>
-                                        <p className="text-2xl font-bold text-yellow-600">{skippedCount}</p>
-                                        <p className="text-sm">Skipped</p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className="text-gray-600 mb-8">
-                                <p>Total Questions: <span className="font-semibold">{totalQuestions}</span></p>
-                                <p>Time Taken: <span className="font-semibold">{formatTime(timeSpent)}</span></p>
-                                <p>Total Score: <span className="font-semibold">{correctCount} / {totalQuestions}</span></p>
-                            </div>
-
-                            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                                <button
-                                    onClick={restartQuiz}
-                                    className="flex items-center justify-center gap-2 px-6 py-3 bg-indigo-600 text-white rounded-xl font-semibold hover:bg-indigo-700 transition-all shadow-lg"
-                                >
-                                    <Home size={20} /> Go to Home
-                                </button>
-                                <button
-                                    onClick={() => startQuiz(selectedSubject, selectedChapter)}
-                                    className="flex items-center justify-center gap-2 px-6 py-3 bg-white border border-indigo-600 text-indigo-600 rounded-xl font-semibold hover:bg-indigo-50 transition-all shadow-lg"
-                                >
-                                    <BarChart3 size={20} /> Retry Chapter
-                                </button>
-                            </div>
-                        </div>
+                    <div className="text-gray-600 mb-8">
+                        <p>Total Questions: <span className="font-semibold">{totalQuestions}</span></p>
+                        <p>Time Taken: <span className="font-semibold">{formatTime(timeSpent)}</span></p>
+                        <p>Total Score: <span className="font-semibold">{correctCount} / {totalQuestions}</span></p>
                     </div>
-                );
-            }
-        }
 
-        // Render the App component
-        ReactDOM.render(<App />, document.getElementById('root'));
-    </script>
-    
-    <!-- PWA Service Worker (Handles caching for offline use) -->
-    <script>
-        // Service Worker Script embedded as a string, then registered
-        const serviceWorkerCode = `
-            const CACHE_NAME = 'quiz-app-v1';
-            const urlsToCache = [
-                '/', 
-                'index.html', 
-                'https://cdn.tailwindcss.com',
-                'https://unpkg.com/react@18/umd/react.development.js',
-                'https://unpkg.com/react-dom@18/umd/react-dom.development.js',
-                'https://unpkg.com/@babel/standalone/babel.min.js'
-                // Note: Placeholder image URLs are often blocked or should be cached manually if needed.
-            ];
-
-            // Install event: Caches all necessary files
-            self.addEventListener('install', event => {
-                event.waitUntil(
-                    caches.open(CACHE_NAME)
-                        .then(cache => {
-                            console.log('Opened cache');
-                            return cache.addAll(urlsToCache).catch(err => {
-                                console.error('Failed to cache resources:', err);
-                            });
-                        })
-                );
-            });
-
-            // Activate event: Cleans up old caches
-            self.addEventListener('activate', event => {
-                const cacheWhitelist = [CACHE_NAME];
-                event.waitUntil(
-                    caches.keys().then(cacheNames => {
-                        return Promise.all(
-                            cacheNames.map(cacheName => {
-                                if (cacheWhitelist.indexOf(cacheName) === -1) {
-                                    return caches.delete(cacheName);
-                                }
-                            })
-                        );
-                    })
-                );
-            });
-
-            // Fetch event: Serves content from cache first, then network (Cache-First strategy)
-            self.addEventListener('fetch', event => {
-                event.respondWith(
-                    caches.match(event.request)
-                        .then(response => {
-                            // Cache hit - return response
-                            if (response) {
-                                return response;
-                            }
-                            // No cache hit - fetch from network
-                            return fetch(event.request).catch(error => {
-                                // Fallback for specific offline content if needed
-                                console.log('Fetch failed; cache fallback.');
-                            });
-                        })
-                );
-            });
-        `;
-
-        // Registering the Service Worker
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                // Create a Blob from the service worker script string
-                const swBlob = new Blob([serviceWorkerCode], { type: 'application/javascript' });
-                const swUrl = URL.createObjectURL(swBlob);
-                
-                navigator.serviceWorker.register(swUrl)
-                    .then(registration => {
-                        console.log('ServiceWorker registration successful with scope: ', registration.scope);
-                    })
-                    .catch(error => {
-                        console.log('ServiceWorker registration failed: ', error);
-                    });
-            });
-        }
-    </script>
-</body>
-</html>
+                    <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                        <button
+                            onClick={restartQuiz}
+                            className="flex items-center justify-center gap-2 px-6 py-3 bg-indigo-600 text-white rounded-xl font-semibold hover:bg-indigo-700 transition-all shadow-lg"
+                        >
+                            <Home size={20} /> Go to Home
+                        </button>
+                        <button
+                            onClick={() => startQuiz(selectedSubject, selectedChapter)}
+                            className="flex items-center justify-center gap-2 px-6 py-3 bg-white border border-indigo-600 text-indigo-600 rounded-xl font-semibold hover:bg-indigo-50 transition-all shadow-lg"
+                        >
+                            <BarChart3 size={20} /> Retry Chapter
+                        </button>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+}
