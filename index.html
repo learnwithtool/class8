@@ -131,266 +131,252 @@
 
         // --- QUIZ DATA STRUCTURE ---
         const quizData = {
-            math: {
-                name: "Mathematics",
-                icon: Calculator,
-                color: "from-blue-500 to-blue-600",
-                chapters: {
-                    algebra: {
-                        name: "Algebra",
-                        questions: [
-                            { q: "What is the value of x in: 2x + 5 = 15?", options: ["5", "10", "7", "8"], correct: 0 },
-                            { q: "Solve for y: 3y - 7 = 14", options: ["7", "5", "9", "6"], correct: 0 },
-                            { q: "What is the coefficient of x in: 5x + 3?", options: ["5", "3", "8", "x"], correct: 0 },
-                            { q: "Simplify: 2(x + 3) = ?", options: ["2x + 6", "2x + 3", "x + 6", "2x + 9"], correct: 0 },
-                            { q: "If x = 4, what is 3x + 2?", options: ["14", "12", "10", "16"], correct: 0 },
-                            { q: "What is x² when x = 5?", options: ["25", "10", "20", "15"], correct: 0 },
-                            { q: "Solve: x/4 = 3", options: ["12", "7", "4", "16"], correct: 0 },
-                            { q: "What is the value of 2x when x = 8?", options: ["16", "10", "18", "14"], correct: 0 },
-                            { q: "Solve: 4x - 12 = 0", options: ["3", "4", "2", "1"], correct: 0 },
-                            { q: "If 5x = 35, then x = ?", options: ["7", "5", "8", "6"], correct: 0 },
-                            { q: "What is x in: x + 15 = 30?", options: ["15", "10", "20", "25"], correct: 0 }
-                        ]
-                    },
-                    geometry: {
-                        name: "Geometry",
-                        questions: [
-                            { q: "Area of circle with radius 7 cm? (π = 22/7)", options: ["154 cm²", "144 cm²", "164 cm²", "174 cm²"], correct: 0 },
-                            { q: "How many sides does a decagon have?", options: ["10", "8", "12", "9"], correct: 0 },
-                            { q: "Sum of angles in a triangle?", options: ["180°", "360°", "90°", "270°"], correct: 0 },
-                            { q: "Area of rectangle: length 8cm, width 5cm?", options: ["40 cm²", "13 cm²", "45 cm²", "35 cm²"], correct: 0 },
-                            { q: "Perimeter of square with side 6cm?", options: ["24 cm", "36 cm", "18 cm", "12 cm"], correct: 0 },
-                            { q: "How many faces does a cube have?", options: ["6", "8", "12", "4"], correct: 0 },
-                            { q: "What is the diameter of a circle with radius 10cm?", options: ["20 cm", "10 cm", "30 cm", "5 cm"], correct: 0 },
-                            { q: "Volume of cube with side 3cm?", options: ["27 cm³", "9 cm³", "12 cm³", "18 cm³"], correct: 0 },
-                            { q: "Area of triangle: base 10cm, height 6cm?", options: ["30 cm²", "60 cm²", "16 cm²", "20 cm²"], correct: 0 },
-                            { q: "How many edges does a cube have?", options: ["12", "8", "6", "10"], correct: 0 },
-                            { q: "Circumference of circle with radius 7cm? (π=22/7)", options: ["44 cm", "154 cm", "28 cm", "88 cm"], correct: 0 }
-                        ]
-                    },
-                    numbers: {
-                        name: "Numbers & Operations",
-                        questions: [
-                            { q: "What is the cube root of 729?", options: ["9", "8", "7", "6"], correct: 0 },
-                            { q: "LCM of 12 and 18?", options: ["36", "24", "54", "72"], correct: 0 },
-                            { q: "HCF of 24 and 36?", options: ["12", "6", "18", "24"], correct: 0 },
-                            { q: "What is 15% of 200?", options: ["30", "25", "35", "40"], correct: 0 },
-                            { q: "Square of 13?", options: ["169", "144", "196", "121"], correct: 0 },
-                            { q: "What is $2^3 \\times 2^2$?", options: ["32", "16", "64", "8"], correct: 0 },
-                            { q: "Convert 0.75 to fraction", options: ["3/4", "2/3", "4/5", "1/2"], correct: 0 },
-                            { q: "What is 20% of 150?", options: ["30", "25", "35", "20"], correct: 0 },
-                            { q: "Find the average of 10, 20, 30, 40", options: ["25", "20", "30", "15"], correct: 0 },
-                            { q: "What is $3^4$?", options: ["81", "64", "27", "12"], correct: 0 },
-                            { q: "Simplify: $48 \\div 6 + 2$", options: ["10", "8", "12", "6"], correct: 0 }
-                        ]
-                    }
-                }
+    math: {
+        name: "Mathematics",
+        icon: "Calculator", // Assuming 'Calculator' is a component/variable reference
+        color: "from-blue-500 to-blue-600",
+        chapters: {
+            algebra: {
+                name: "Algebra",
+                questions: [
+                    { q: "What is the value of x in: 2x + 5 = 15?", options: ["5", "10", "7", "8"], correct: 0 },
+                    { q: "Solve for y: 3y - 7 = 14", options: ["7", "5", "9", "6"], correct: 0 },
+                    { q: "What is the coefficient of x in: 5x + 3?", options: ["5", "3", "8", "x"], correct: 0 },
+                    { q: "Simplify: 2(x + 3) = ?", options: ["2x + 6", "2x + 3", "x + 6", "2x + 9"], correct: 0 },
+                    { q: "If x = 4, what is 3x + 2?", options: ["14", "12", "10", "16"], correct: 0 },
+                    { q: "What is x² when x = 5?", options: ["25", "10", "20", "15"], correct: 0 },
+                    { q: "Solve: x/4 = 3", options: ["12", "7", "4", "16"], correct: 0 },
+                    { q: "What is the value of 2x when x = 8?", options: ["16", "10", "18", "14"], correct: 0 },
+                    { q: "Solve: 4x - 12 = 0", options: ["3", "4", "2", "1"], correct: 0 },
+                    { q: "If 5x = 35, then x = ?", options: ["7", "5", "8", "6"], correct: 0 },
+                    { q: "What is x in: x + 15 = 30?", options: ["15", "10", "20", "25"], correct: 0 }
+                ]
             },
-            science: {
-                name: "Science",
-                icon: Beaker,
-                color: "from-green-500 to-green-600",
-                chapters: {
-                    biology: {
-                        name: "Biology - Cell Structure",
-                        questions: [
-                            { q: "What is the powerhouse of the cell?", options: ["Mitochondria", "Nucleus", "Ribosome", "Chloroplast"], correct: 0 },
-                            { q: "Which organelle controls cell activities?", options: ["Nucleus", "Mitochondria", "Cell membrane", "Cytoplasm"], correct: 0 },
-                            { q: "What gives plants their green color?", options: ["Chlorophyll", "Carotene", "Xanthophyll", "Anthocyanin"], correct: 0 },
-                            { q: "Cell wall is found in?", options: ["Plants", "Animals", "Humans", "Bacteria only"], correct: 0 },
-                            { q: "What is the basic unit of life?", options: ["Cell", "Tissue", "Organ", "Atom"], correct: 0 },
-                            { q: "Which organelle helps in protein synthesis?", options: ["Ribosome", "Lysosome", "Vacuole", "Golgi body"], correct: 0 },
-                            { q: "What is the jelly-like substance in cells?", options: ["Cytoplasm", "Nucleoplasm", "Protoplasm", "Plasma"], correct: 0 },
-                            { q: "Lysosomes are known as?", options: ["Suicide bags", "Power house", "Control center", "Storage units"], correct: 0 }
-                        ]
-                    },
-                    chemistry: {
-                        name: "Chemistry - Elements & Compounds",
-                        questions: [
-                            { q: "Chemical formula for water?", options: ["$H_2O$", "$CO_2$", "$NaCl$", "$O_2$"], correct: 0 },
-                            { q: "Which gas do plants absorb?", options: ["Carbon Dioxide", "Oxygen", "Nitrogen", "Hydrogen"], correct: 0 },
-                            { q: "Symbol for Gold?", options: ["Au", "Ag", "Fe", "Cu"], correct: 0 },
-                            { q: "Common salt is?", options: ["NaCl", "KCl", "CaCl2", "MgCl2"], correct: 0 },
-                            { q: "Atomic number of Carbon?", options: ["6", "12", "8", "14"], correct: 0 },
-                            { q: "pH of pure water?", options: ["7", "0", "14", "10"], correct: 0 },
-                            { q: "What is the symbol for Iron?", options: ["Fe", "Ir", "In", "I"], correct: 0 },
-                            { q: "Which gas is needed for burning?", options: ["Oxygen", "Nitrogen", "Carbon dioxide", "Helium"], correct: 0 }
-                        ]
-                    },
-                    physics: {
-                        name: "Physics - Force & Motion",
-                        questions: [
-                            { q: "Unit of force?", options: ["Newton", "Joule", "Watt", "Pascal"], correct: 0 },
-                            { q: "Speed of light?", options: ["$3 \\times 10^8 m/s$", "$3 \\times 10^6 m/s$", "$3 \\times 10^7 m/s$", "$3 \\times 10^9 m/s$"], correct: 0 },
-                            { q: "SI unit of pressure?", options: ["Pascal", "Newton", "Bar", "Atmosphere"], correct: 0 },
-                            { q: "Formula for speed?", options: ["Distance/Time", "Time/Distance", "Distance x Time", "Force x Time"], correct: 0 },
-                            { q: "Acceleration due to gravity?", options: ["$9.8 m/s^2$", "$10 m/s^2$", "$8.9 m/s^2$", "$9 m/s^2$"], correct: 0 },
-                            { q: "1 Newton equals?", options: ["$1 kg \\cdot m/s^2$", "$1 kg \\cdot m$", "$1 kg/s^2$", "$1 m/s^2$"], correct: 0 },
-                            { q: "What is inertia?", options: ["Resistance to motion", "Force applied", "Speed of object", "Mass of object"], correct: 0 },
-                            { q: "Friction is a?", options: ["Contact force", "Non-contact force", "Magnetic force", "Gravitational force"], correct: 0 }
-                        ]
-                    }
-                }
+            geometry: {
+                name: "Geometry",
+                questions: [
+                    { q: "Area of circle with radius 7 cm? (π = 22/7)", options: ["154 cm²", "144 cm²", "164 cm²", "174 cm²"], correct: 0 },
+                    { q: "How many sides does a decagon have?", options: ["10", "8", "12", "9"], correct: 0 },
+                    { q: "Sum of angles in a triangle?", options: ["180°", "360°", "90°", "270°"], correct: 0 },
+                    { q: "Area of rectangle: length 8cm, width 5cm?", options: ["40 cm²", "13 cm²", "45 cm²", "35 cm²"], correct: 0 },
+                    { q: "Perimeter of square with side 6cm?", options: ["24 cm", "36 cm", "18 cm", "12 cm"], correct: 0 },
+                    { q: "How many faces does a cube have?", options: ["6", "8", "12", "4"], correct: 0 },
+                    { q: "What is the diameter of a circle with radius 10cm?", options: ["20 cm", "10 cm", "30 cm", "5 cm"], correct: 0 },
+                    { q: "Volume of cube with side 3cm?", options: ["27 cm³", "9 cm³", "12 cm³", "18 cm³"], correct: 0 },
+                    { q: "Area of triangle: base 10cm, height 6cm?", options: ["30 cm²", "60 cm²", "16 cm²", "20 cm²"], correct: 0 },
+                    { q: "How many edges does a cube have?", options: ["12", "8", "6", "10"], correct: 0 },
+                    { q: "Circumference of circle with radius 7cm? (π=22/7)", options: ["44 cm", "154 cm", "28 cm", "88 cm"], correct: 0 }
+                ]
             },
-            health: {
-                name: "Health & PE",
-                icon: Heart,
-                color: "from-red-500 to-red-600",
-                chapters: {
-                    humanbody: {
-                        name: "Human Body Organization",
-                        questions: [
-                            { q: "What is considered the basic unit of life in the human body?", options: ["Organ", "Tissue", "Cell", "Organ System"], correct: 2 },
-                            { q: "The human body is described as a multicellular organism. What does 'multicellular' primarily mean?", options: ["Having only one cell", "Having many different colors", "Having many cells", "Having many systems"], correct: 2 },
-                            { q: "In the hierarchy of organization, what level comes directly after cells?", options: ["Organ systems", "Organs", "Homeostasis", "Tissues"], correct: 3 },
-                            { q: "A collection of similar tissues working together forms what level of organization?", options: ["A cell", "An organ", "An external world", "A basic unit"], correct: 1 },
-                            { q: "What is the highest level of structural organization mentioned, which is made up of a collection of organs?", options: ["Organ systems", "Tissues", "Homeostasis", "Multicellular"], correct: 0 },
-                            { q: "The arrangement of structures from cells to tissues to organs and organ systems is called a remarkable:", options: ["Simple structure", "Life function", "Hierarchy of organization", "External world"], correct: 2 },
-                            { q: "The human body maintains a stable internal environment through a process called:", options: ["Coordination", "Complexity", "Homeostasis", "Integration"], correct: 2 },
-                            { q: "Organ systems work in an integrated and coordinated manner to perform essential:", options: ["External interactions", "Life functions", "Single-cell tasks", "Stable environments"], correct: 1 },
-                            { q: "What is the function of homeostasis?", options: ["To break down food", "To interact with the external world", "To make the body complex", "To maintain a stable internal environment"], correct: 3 },
-                            { q: "Which characteristic describes the human body?", options: ["Simple and unicellular", "Complex and multicellular", "Basic unit of life", "A stable external world"], correct: 1 },
-                            { q: "What is the structural level that is a collection of organ systems?", options: ["The basic unit", "The human organism", "The tissue", "The organ"], correct: 1 },
-                            { q: "Which level of organization is found directly before the Organ System level?", options: ["Cells", "Tissues", "Organs", "The external world"], correct: 2 },
-                            { q: "The main role of organ systems is to allow interaction with what?", options: ["The internal environment", "The stable internal body", "The complex structure", "The external world"], correct: 3 },
-                            { q: "Which term means working together in a smooth and combined way?", options: ["Multicellular", "Basic unit", "Integrated and coordinated", "Hierarchy of organization"], correct: 2 },
-                            { q: "What does the word 'basic' refer to in the phrase 'basic unit of life'?", options: ["The most complex", "The most important start", "The final stage", "The combined function"], correct: 1 },
-                            { q: "Which is the correct order of organization from smallest to largest?", options: ["Organ System → Organ → Tissue → Cell", "Cell → Organ System → Tissue → Organ", "Cell → Tissue → Organ → Organ System", "Organ → Cell → Tissue → Organ System"], correct: 2 },
-                            { q: "What do organ systems aim to keep stable?", options: ["The complexity of the body", "The internal environment", "The external world", "The hierarchy of organization"], correct: 1 },
-                            { q: "The description states the body is a collection of organ systems. What does 'collection' imply?", options: ["They work separately", "They are all gathered together", "They are only one unit", "They only break down"], correct: 1 },
-                            { q: "Which term from the text refers to a group of similar cells working together?", options: ["Organ", "Tissue", "Cell", "Homeostasis"], correct: 1 },
-                            { q: "Besides maintaining homeostasis, what else do organ systems do?", options: ["Only define the basic unit", "Perform essential life functions", "Stop all coordination", "Only form tissues"], correct: 1 }
-                        ]
-                    },
-                    nutrition: {
-                        name: "Nutrition & Diet",
-                        questions: [
-                            { q: "Primary source of energy?", options: ["Carbohydrates", "Proteins", "Fats", "Vitamins"], correct: 0 },
-                            { q: "Vitamin produced by sunlight?", options: ["Vitamin D", "Vitamin C", "Vitamin A", "Vitamin B12"], correct: 0 },
-                            { q: "Daily water intake for teens?", options: ["8-10 glasses", "3-4 glasses", "5-6 glasses", "15-20 glasses"], correct: 0 },
-                            { q: "Which vitamin helps in blood clotting?", options: ["Vitamin K", "Vitamin C", "Vitamin D", "Vitamin E"], correct: 0 },
-                            { q: "Protein-rich food?", options: ["Eggs", "Rice", "Bread", "Apple"], correct: 0 },
-                            { q: "Deficiency of Vitamin C causes?", options: ["Scurvy", "Rickets", "Anemia", "Goiter"], correct: 0 },
-                            { q: "Which mineral is important for bones?", options: ["Calcium", "Iron", "Sodium", "Potassium"], correct: 0 },
-                            { q: "Fiber-rich foods help in?", options: ["Digestion", "Blood clotting", "Vision", "Hair growth"], correct: 0 }
-                        ]
-                    },
-                    fitness: {
-                        name: "Physical Fitness",
-                        questions: [
-                            { q: "Exercise frequency per week?", options: ["3-5 times", "Once a week", "Every day", "Only weekends"], correct: 0 },
-                            { q: "Sleep hours for teenagers?", options: ["8-10 hours", "5-6 hours", "6-7 hours", "11-12 hours"], correct: 0 },
-                            { q: "Best time to drink water during exercise?", options: ["Before, during, after", "Only after", "Only before", "Only during"], correct: 0 },
-                            { q: "What does BMI stand for?", options: ["Body Mass Index", "Body Muscle Index", "Body Metabolism Index", "Bone Mass Index"], correct: 0 },
-                            { q: "Warm-up exercises help?", options: ["Prevent injuries", "Build muscle", "Lose weight", "Increase height"], correct: 0 },
-                            { q: "Aerobic exercise improves?", options: ["Heart health", "Flexibility", "Muscle size", "Bone density"], correct: 0 },
-                            { q: "Stretching improves?", options: ["Flexibility", "Strength", "Speed", "Endurance"], correct: 0 },
-                            { q: "Cooldown after exercise helps?", options: ["Reduce muscle soreness", "Burn more calories", "Build strength", "Increase speed"], correct: 0 }
-                        ]
-                    }
-                }
-            },
-            geography: {
-                name: "Geography",
-                icon: Globe,
-                color: "from-purple-500 to-purple-600",
-                chapters: {
-                    physical: {
-                        name: "Physical Geography",
-                        questions: [
-                            { q: "Largest continent by area?", options: ["Asia", "Africa", "North America", "Europe"], correct: 0 },
-                            { q: "Longest river in the world?", options: ["Nile", "Amazon", "Yangtze", "Mississippi"], correct: 0 },
-                            { q: "Largest ocean?", options: ["Pacific", "Atlantic", "Indian", "Arctic"], correct: 0 },
-                            { q: "Highest mountain peak?", options: ["Mt. Everest", "K2", "Kangchenjunga", "Makalu"], correct: 0 },
-                            { q: "Largest desert?", options: ["Sahara", "Arabian", "Gobi", "Kalahari"], correct: 0 },
-                            { q: "Largest island?", options: ["Greenland", "New Guinea", "Borneo", "Madagascar"], correct: 0 },
-                            { q: "Deepest ocean trench?", options: ["Mariana", "Tonga", "Philippine", "Kermadec"], correct: 0 },
-                            { q: "Longest mountain range?", options: ["Andes", "Himalayas", "Rockies", "Alps"], correct: 0 }
-                        ]
-                    },
-                    political: {
-                        name: "Political Geography",
-                        questions: [
-                            { q: "Capital of Australia?", options: ["Canberra", "Sydney", "Melbourne", "Brisbane"], correct: 0 },
-                            { q: "Number of continents?", options: ["7", "5", "6", "8"], correct: 0 },
-                            { q: "Largest country by area?", options: ["Russia", "Canada", "China", "USA"], correct: 0 },
-                            { q: "Capital of Brazil?", options: ["Brasília", "Rio de Janeiro", "São Paulo", "Salvador"], correct: 0 },
-                            { q: "Which country has most population?", options: ["India", "China", "USA", "Indonesia"], correct: 0 },
-                            { q: "Capital of Egypt?", options: ["Cairo", "Alexandria", "Giza", "Luxor"], correct: 0 },
-                            { q: "Smallest country by area?", options: ["Vatican City", "Monaco", "Nauru", "San Marino"], correct: 0 },
-                            { q: "Capital of Japan?", options: ["Tokyo", "Osaka", "Kyoto", "Hiroshima"], correct: 0 }
-                        ]
-                    }
-                }
-            },
-            english: {
-                name: "English",
-                icon: BookOpen,
-                color: "from-orange-500 to-orange-600",
-                chapters: {
-                    grammar: {
-                        name: "Grammar Basics",
-                        questions: [
-                            { q: "What is a noun?", options: ["Person, place, thing", "Action word", "Describing word", "Connecting word"], correct: 0 },
-                            { q: "Plural of 'child'?", options: ["Children", "Childs", "Childrens", "Childes"], correct: 0 },
-                            { q: "Punctuation for possession?", options: ["Apostrophe (')", "Comma (,)", "Period (.)", "Colon (:)"], correct: 0 },
-                            { q: "What is a verb?", options: ["Action word", "Naming word", "Describing word", "Joining word"], correct: 0 },
-                            { q: "Past tense of 'go'?", options: ["Went", "Gone", "Goed", "Going"], correct: 0 },
-                            { q: "Which is an adjective?", options: ["Beautiful", "Run", "Quickly", "And"], correct: 0 },
-                            { q: "What is a pronoun?", options: ["Replaces noun", "Action word", "Describing word", "Number word"], correct: 0 },
-                            { q: "Plural of 'mouse'?", options: ["Mice", "Mouses", "Meese", "Mices"], correct: 0 }
-                        ]
-                    },
-                    vocabulary: {
-                        name: "Vocabulary & Spellings",
-                        questions: [
-                            { q: "Correct spelling?", options: ["Definitely", "Definately", "Definetly", "Definitly"], correct: 0 },
-                            { q: "Synonym for 'happy'?", options: ["Joyful", "Sad", "Angry", "Tired"], correct: 0 },
-                            { q: "Antonym for 'hot'?", options: ["Cold", "Warm", "Cool", "Tepid"], correct: 0 },
-                            { q: "Meaning of 'abundant'?", options: ["Plentiful", "Scarce", "Empty", "Few"], correct: 0 },
-                            { q: "Correct spelling?", options: ["Necessary", "Neccessary", "Neccesary", "Necesary"], correct: 0 },
-                            { q: "Synonym for 'difficult'?", options: ["Hard", "Easy", "Simple", "Clear"], correct: 0 },
-                            { q: "Meaning of 'enormous'?", options: ["Very large", "Very small", "Medium", "Tiny"], correct: 0 },
-                            { q: "Antonym for 'strong'?", options: ["Weak", "Powerful", "Sturdy", "Tough"], correct: 0 }
-                        ]
-                    }
-                }
-            },
-            history: {
-                name: "History",
-                icon: Brain,
-                color: "from-yellow-500 to-yellow-600",
-                chapters: {
-                    indian: {
-                        name: "Indian History",
-                        questions: [
-                            { q: "India's independence year?", options: ["1947", "1945", "1950", "1942"], correct: 0 },
-                            { q: "Father of the Nation?", options: ["Mahatma Gandhi", "Nehru", "Patel", "Bose"], correct: 0 },
-                            { q: "First PM of India?", options: ["Jawaharlal Nehru", "Lal Bahadur Shastri", "Indira Gandhi", "Rajendra Prasad"], correct: 0 },
-                            { q: "Constitution adopted on?", options: ["26 Jan 1950", "15 Aug 1947", "26 Nov 1949", "2 Oct 1947"], correct: 0 },
-                            { q: "Quit India Movement started in?", options: ["1942", "1940", "1945", "1947"], correct: 0 },
-                            { q: "Who wrote National Anthem?", options: ["Rabindranath Tagore", "Bankim Chandra", "Sarojini Naidu", "Subhas Bose"], correct: 0 },
-                            { q: "Iron Man of India?", options: ["Sardar Patel", "Bhagat Singh", "Lal Bahadur Shastri", "B.R. Ambedkar"], correct: 0 },
-                            { q: "First President of India?", options: ["Rajendra Prasad", "S. Radhakrishnan", "Zakir Husain", "APJ Abdul Kalam"], correct: 0 }
-                        ]
-                    },
-                    world: {
-                        name: "World History",
-                        questions: [
-                            { q: "First US President?", options: ["George Washington", "Thomas Jefferson", "Abraham Lincoln", "John Adams"], correct: 0 },
-                            { q: "World War II ended in?", options: ["1945", "1944", "1946", "1943"], correct: 0 },
-                            { q: "Who invented telephone?", options: ["Alexander Graham Bell", "Thomas Edison", "Nikola Tesla", "Benjamin Franklin"], correct: 0 },
-                            { q: "Pyramids built by?", options: ["Egyptians", "Romans", "Greeks", "Mayans"], correct: 0 },
-                            { q: "French Revolution year?", options: ["1789", "1776", "1799", "1804"], correct: 0 },
-                            { q: "Columbus discovered America in?", options: ["1492", "1500", "1488", "1498"], correct: 0 },
-                            { q: "First man on moon?", options: ["Neil Armstrong", "Buzz Aldrin", "Yuri Gagarin", "John Glenn"], correct: 0 },
-                            { q: "World War I started in?", options: ["1914", "1918", "1910", "1920"], correct: 0 }
-                        ]
-                    }
-                }
+            numbers: {
+                name: "Numbers & Operations",
+                questions: [
+                    { q: "What is the cube root of 729?", options: ["9", "8", "7", "6"], correct: 0 },
+                    { q: "LCM of 12 and 18?", options: ["36", "24", "54", "72"], correct: 0 },
+                    { q: "HCF of 24 and 36?", options: ["12", "6", "18", "24"], correct: 0 },
+                    { q: "What is 15% of 200?", options: ["30", "25", "35", "40"], correct: 0 },
+                    { q: "Square of 13?", options: ["169", "144", "196", "121"], correct: 0 },
+                    { q: "What is $2^3 \\times 2^2$?", options: ["32", "16", "64", "8"], correct: 0 },
+                    { q: "Convert 0.75 to fraction", options: ["3/4", "2/3", "4/5", "1/2"], correct: 0 },
+                    { q: "What is 20% of 150?", options: ["30", "25", "35", "20"], correct: 0 },
+                    { q: "Find the average of 10, 20, 30, 40", options: ["25", "20", "30", "15"], correct: 0 },
+                    { q: "What is $3^4$?", options: ["81", "64", "27", "12"], correct: 0 },
+                    { q: "Simplify: $48 \\div 6 + 2$", options: ["10", "8", "12", "6"], correct: 0 }
+                ]
             }
-        };
-
+        }
+    },
+    science: {
+        name: "Science",
+        icon: "Beaker", // Assuming 'Beaker' is a component/variable reference
+        color: "from-green-500 to-green-600",
+        chapters: {
+            biology: {
+                name: "Biology - Cell Structure",
+                questions: [
+                    { q: "What is the powerhouse of the cell?", options: ["Mitochondria", "Nucleus", "Ribosome", "Chloroplast"], correct: 0 },
+                    { q: "Which organelle controls cell activities?", options: ["Nucleus", "Mitochondria", "Cell membrane", "Cytoplasm"], correct: 0 },
+                    { q: "What gives plants their green color?", options: ["Chlorophyll", "Carotene", "Xanthophyll", "Anthocyanin"], correct: 0 },
+                    { q: "Cell wall is found in?", options: ["Plants", "Animals", "Humans", "Bacteria only"], correct: 0 },
+                    { q: "What is the basic unit of life?", options: ["Cell", "Tissue", "Organ", "Atom"], correct: 0 },
+                    { q: "Which organelle helps in protein synthesis?", options: ["Ribosome", "Lysosome", "Vacuole", "Golgi body"], correct: 0 },
+                    { q: "What is the jelly-like substance in cells?", options: ["Cytoplasm", "Nucleoplasm", "Protoplasm", "Plasma"], correct: 0 },
+                    { q: "Lysosomes are known as?", options: ["Suicide bags", "Power house", "Control center", "Storage units"], correct: 0 }
+                ]
+            },
+            chemistry: {
+                name: "Chemistry - Elements & Compounds",
+                questions: [
+                    { q: "Chemical formula for water?", options: ["$H_2O$", "$CO_2$", "$NaCl$", "$O_2$"], correct: 0 },
+                    { q: "Which gas do plants absorb?", options: ["Carbon Dioxide", "Oxygen", "Nitrogen", "Hydrogen"], correct: 0 },
+                    { q: "Symbol for Gold?", options: ["Au", "Ag", "Fe", "Cu"], correct: 0 },
+                    { q: "Common salt is?", options: ["NaCl", "KCl", "CaCl2", "MgCl2"], correct: 0 },
+                    { q: "Atomic number of Carbon?", options: ["6", "12", "8", "14"], correct: 0 },
+                    { q: "pH of pure water?", options: ["7", "0", "14", "10"], correct: 0 },
+                    { q: "What is the symbol for Iron?", options: ["Fe", "Ir", "In", "I"], correct: 0 },
+                    { q: "Which gas is needed for burning?", options: ["Oxygen", "Nitrogen", "Carbon dioxide", "Helium"], correct: 0 }
+                ]
+            },
+            physics_intro: {
+                name: "Physics - Force & Motion (Intro)",
+                questions: [
+                    { q: "Unit of force?", options: ["Newton", "Joule", "Watt", "Pascal"], correct: 0 },
+                    { q: "Speed of light?", options: ["$3 \\times 10^8 m/s$", "$3 \\times 10^6 m/s$", "$3 \\times 10^7 m/s$", "$3 \\times 10^9 m/s$"], correct: 0 },
+                    { q: "SI unit of pressure?", options: ["Pascal", "Newton", "Bar", "Atmosphere"], correct: 0 },
+                    { q: "Formula for speed?", options: ["Distance/Time", "Time/Distance", "Distance x Time", "Force x Time"], correct: 0 },
+                    { q: "Acceleration due to gravity?", options: ["$9.8 m/s^2$", "$10 m/s^2$", "$8.9 m/s^2$", "$9 m/s^2$"], correct: 0 },
+                    { q: "1 Newton equals?", options: ["$1 kg \\cdot m/s^2$", "$1 kg \\cdot m$", "$1 kg/s^2$", "$1 m/s^2$"], correct: 0 },
+                    { q: "What is inertia?", options: ["Resistance to motion", "Force applied", "Speed of object", "Mass of object"], correct: 0 },
+                    { q: "Friction is a?", options: ["Contact force", "Non-contact force", "Magnetic force", "Gravitational force"], correct: 0 }
+                ]
+            },
+            // --- NEWLY ADDED UNITS BELOW ---
+            physics_velocity: {
+                name: "Unit 2: Velocity and Acceleration",
+                questions: [
+                    { q: "Which of the following describes a body that is considered to be at rest?", options: ["A flying bird", "A running bus", "A walking man", "A tower"], correct: 3 },
+                    { q: "A body is said to be in uniform motion if it moves with:", options: ["Variable speed", "Constant velocity", "Zero acceleration", "Increasing displacement"], correct: 1 },
+                    { q: "What kind of motion does a body exhibit if its velocity is not constant?", options: ["Stationary motion", "Uniform motion", "Non-uniform motion", "Zero motion"], correct: 2 },
+                    { q: "The average distance traveled by a body in a particular direction in one second is called:", options: ["Displacement", "Average speed", "Average velocity", "Acceleration"], correct: 2 },
+                    { q: "Which formula is used to calculate the average velocity (vav) of a body?", options: ["vav = total time taken × total displacement", "vav = total displacement / total time taken", "vav = (final velocity - initial velocity) / 2", "vav = total distance / total time taken"], correct: 1 },
+                    { q: "A car is displaced 20 m in 4 s and then 30 m in the next 6 s in the same direction. What is its average velocity?", options: ["4 m/s", "5 m/s", "10 m/s", "50 m/s"], correct: 1 },
+                    { q: "The velocity of a body defined with respect to a reference point is called:", options: ["Absolute velocity", "Uniform velocity", "Relative velocity", "Average velocity"], correct: 2 },
+                    { q: "Why is the state of rest or motion of a body considered a relative term?", options: ["It only depends on the body's mass", "It depends on the size of the body", "It depends on the state of the body with the reference objects", "It is always defined with respect to the sun"], correct: 2 },
+                    { q: "Two cars, A and B, are moving with velocities 15 m/s and 10 m/s respectively, in the same direction. What is the relative velocity of car A with respect to car B?", options: ["25 m/s", "150 m/s", "5 m/s", "1.5 m/s"], correct: 2 },
+                    { q: "If two cars are moving with velocities VA = 12 m/s and VB = 8 m/s in opposite directions, what is their relative velocity (VAB)?", options: ["4 m/s", "20 m/s", "96 m/s", "1.5 m/s"], correct: 1 },
+                    { q: "What is the term for the rate of increase in velocity?", options: ["Retardation", "Uniform motion", "Acceleration", "Relative velocity"], correct: 2 },
+                    { q: "What is the SI unit of acceleration?", options: ["m/s", "m/s²", "N", "kg/m³"], correct: 1 },
+                    { q: "Retardation is also known as:", options: ["Positive acceleration", "Uniform velocity", "Negative acceleration", "Constant velocity"], correct: 2 },
+                    { q: "When is the acceleration of a body zero?", options: ["When it starts from rest", "When it is in non-uniform motion", "When it has uniform velocity", "When it is thrown upwards"], correct: 2 },
+                    { q: "A bus starts from rest (u=0 m/s) and attains a velocity of 10 m/s in 5 s. What is its acceleration (a)?", options: ["0.5 m/s²", "2 m/s²", "5 m/s²", "50 m/s²"], correct: 1 },
+                    { q: "A car is traveling at 20 m/s. The driver applies the brake and the car stops (v=0 m/s) in 10 s. What is the retardation (a) of the car?", options: ["2 m/s²", "1 m/s²", "–2 m/s²", "–10 m/s²"], correct: 0 },
+                    { q: "Which equation relates final velocity (v), initial velocity (u), acceleration (a), and time (t)?", options: ["v = u + at", "v² = u² + 2as", "s = ut + ½at²", "v = (u + a) / t"], correct: 0 },
+                    { q: "A train increases its velocity from 10 m/s to 30 m/s over a time period of 5 s. What is the acceleration of the train?", options: ["2 m/s²", "4 m/s²", "5 m/s²", "8 m/s²"], correct: 1 },
+                    { q: "A motorcycle starts from rest (u=0 m/s) with an acceleration of 0.5 m/s². What is its velocity (v) after 10 seconds?", options: ["0.5 m/s", "5 m/s", "10 m/s", "50 m/s"], correct: 1 },
+                    { q: "Which of the following defines the concept of a reference point?", options: ["A point where acceleration is zero", "A fixed location used to define the relative velocity of an object", "The point where a body changes from uniform to non-uniform motion", "The midpoint between two moving objects"], correct: 1 }
+                ]
+            },
+            physics_simple_machines: {
+                name: "Unit 3: Simple Machine",
+                questions: [
+                    { q: "What is the primary function of a simple machine?", options: ["To increase the total amount of work done", "To do work easily, quickly, and with less effort", "To decrease the distance over which the effort is applied", "To eliminate friction entirely"], correct: 1 },
+                    { q: "Which of the following is defined as the force applied to operate a simple machine?", options: ["Load (L)", "Effort (E)", "Fulcrum (F)", "Mechanical Advantage (MA)"], correct: 1 },
+                    { q: "The ratio of the load to the effort on a balanced lever is called:", options: ["Velocity Ratio (VR)", "Efficiency (η)", "Mechanical Advantage (MA)", "Input Work"], correct: 2 },
+                    { q: "What does a Mechanical Advantage (MA) of 2.5 signify for a simple machine?", options: ["The effort must move 2.5 times the load distance", "The machine can lift a load 2.5 times heavier than the applied effort", "The efficiency of the machine is 25%", "The effort applied is 2.5 times greater than the load"], correct: 1 },
+                    { q: "Which factor causes the Mechanical Advantage (MA) of a simple machine to decrease?", options: ["Increase in load distance", "Decrease in effort applied", "Increase in friction", "Increase in Velocity Ratio (VR)"], correct: 2 },
+                    { q: "The ratio of the distance moved by the effort to the distance moved by the load is called:", options: ["Mechanical Advantage (MA)", "Efficiency (η)", "Work Ratio", "Velocity Ratio (VR)"], correct: 3 },
+                    { q: "How is the Velocity Ratio (VR) of a simple machine affected by friction?", options: ["VR increases due to friction", "VR decreases due to friction", "Friction has no effect on VR", "VR is equal to the mechanical advantage when friction is present"], correct: 2 },
+                    { q: "What is the work done by the machine when effort is applied?", options: ["Input Work", "Output Work", "Net Work", "Waste Work"], correct: 1 },
+                    { q: "The ratio of output work to input work in a machine, expressed as a percentage, is called:", options: ["Mechanical Advantage", "Velocity Ratio", "Efficiency", "Work Multiplier"], correct: 2 },
+                    { q: "Due to friction, the Mechanical Advantage (MA) of any real machine is always:", options: ["Equal to the Velocity Ratio (VR)", "Greater than the Velocity Ratio (VR)", "Less than the Velocity Ratio (VR)", "Independent of the Velocity Ratio (VR)"], correct: 2 },
+                    { q: "An effort of 50 N is applied to lift a load of 200 N using a lever. What is the Mechanical Advantage (MA) of the lever?", options: ["0.25", "4", "250", "100"], correct: 1 },
+                    { q: "If the effort is displaced 5 m and the load is lifted 1 m, what is the Velocity Ratio (VR) of the machine?", options: ["0.2", "1", "5", "6"], correct: 2 },
+                    { q: "A machine has an MA of 4 and a VR of 5. What is the efficiency (η) of the machine?", options: ["125%", "80%", "20%", "40%"], correct: 1 },
+                    { q: "The work done on the machine when an effort is applied is called:", options: ["Useful work", "Output work", "Input work", "Effort work"], correct: 2 },
+                    { q: "Work done on a machine is calculated using the formula:", options: ["Load × Load Distance", "Load ÷ Effort", "Effort × Effort Distance", "Effort ÷ Load Distance"], correct: 2 },
+                    { q: "The efficiency of a simple machine can be represented by which of the following ratios?", options: ["(MA / VR) × 100%", "(Effort / Load) × 100%", "(VR / MA) × 100%", "(Load Distance / Effort Distance) × 100%"], correct: 0 },
+                    { q: "If a load of 500 N is lifted using an effort of 200 N, the Mechanical Advantage (MA) is:", options: ["0.4", "2.5", "3", "5"], correct: 1 },
+                    { q: "If the effort applied in a simple machine is magnified (i.e., the load lifted is greater than the effort), which distance must be true?", options: ["Effort distance must be equal to load distance", "Effort distance must be greater than load distance", "Effort distance must be less than load distance", "Effort distance must be zero"], correct: 1 },
+                    { q: "A machine is 100% efficient. This implies:", options: ["MA < VR", "Input Work < Output Work", "MA = VR", "Friction is maximized"], correct: 2 },
+                    { q: "Which part of the lever system is the weight of the object to be lifted?", options: ["Effort (E)", "Fulcrum (F)", "Load (L)", "Effort Distance"], correct: 2 }
+                ]
+            },
+            physics_pressure: {
+                name: "Unit 4: Pressure",
+                questions: [
+                    { q: "What is defined as the force acting perpendicularly on a unit area of a body?", options: ["Thrust", "Weight", "Pressure", "Force"], correct: 2 },
+                    { q: "What is the total force exerted by a body on a surface called?", options: ["Pressure", "Thrust", "Weight", "Density"], correct: 1 },
+                    { q: "What is the SI unit of pressure?", options: ["Newton (N)", "Joule (J)", "Pascal (Pa)", "Watt (W)"], correct: 2 },
+                    { q: "Which formula correctly represents the calculation of pressure?", options: ["Pressure = Area × Force", "Pressure = Force / Area", "Pressure = Area / Force", "Pressure = Force × Volume"], correct: 1 },
+                    { q: "If the area on which a force is applied is increased, how does the resulting pressure change, assuming the force remains constant?", options: ["Pressure increases", "Pressure decreases", "Pressure remains the same", "Pressure first increases and then decreases"], correct: 1 },
+                    { q: "Why does the edge of a knife become sharp?", options: ["To increase the force applied", "To increase the area and reduce the force", "To reduce the area and increase the pressure", "To reduce the friction"], correct: 2 },
+                    { q: "A force of 100 N is applied over an area of 0.5 m². What is the pressure exerted?", options: ["50 Pa", "100 Pa", "200 Pa", "500 Pa"], correct: 2 },
+                    { q: "Which scientist is the Pascal (Pa) unit of pressure named after?", options: ["Isaac Newton", "Evangelista Torricelli", "Blaise Pascal", "Archimedes"], correct: 2 },
+                    { q: "What is the pressure exerted by a liquid known as?", options: ["Atmospheric pressure", "Lateral pressure", "Hydrostatic pressure", "Density pressure"], correct: 2 },
+                    { q: "How does the liquid pressure at a point in a container change with the depth of the point?", options: ["It decreases with depth", "It is independent of depth", "It increases with depth", "It depends only on the shape of the container"], correct: 2 },
+                    { q: "At the same depth in a stationary liquid, the pressure:", options: ["Is equal in all directions", "Is greater vertically", "Is greater horizontally", "Depends on the volume of the liquid"], correct: 0 },
+                    { q: "Which instrument is used to measure the atmospheric pressure?", options: ["Hydrometer", "Barometer", "Spring balance", "Beam balance"], correct: 1 },
+                    { q: "The atmospheric pressure at sea level is approximately equal to the pressure exerted by a column of mercury of what height?", options: ["76 cm of Hg", "76 m of Hg", "10 m of water", "1 mm of Hg"], correct: 0 },
+                    { q: "What is defined as the force acting per unit area of the earth's surface due to the weight of the air column above it?", options: ["Liquid pressure", "Barometric pressure", "Thrust", "Atmospheric pressure"], correct: 3 },
+                    { q: "As we move up a mountain to a higher altitude, the atmospheric pressure:", options: ["Increases, because the height of the air column above decreases", "Decreases, because the height of the air column above decreases", "Remains the same", "Decreases due to temperature rise"], correct: 1 },
+                    { q: "The pressure exerted by a liquid column is given by P=hρg. What does the symbol ρ (rho) represent?", options: ["Height of the liquid", "Acceleration due to gravity", "Density of the liquid", "Volume of the liquid"], correct: 2 },
+                    { q: "What is the principle that states that an external pressure applied to an enclosed liquid is transmitted equally in all directions throughout the liquid and to the walls of the container?", options: ["Archimedes' Principle", "Newton's Third Law", "Pascal's Law", "Bernoulli's Principle"], correct: 2 },
+                    { q: "Hydraulic presses, hydraulic brakes, and hydraulic jacks all function based on which scientific principle?", options: ["Archimedes' Principle", "Pascal's Law", "Law of Conservation of Energy", "Newton's First Law"], correct: 1 },
+                    { q: "A force of 50 N is applied to a piston with an area of 0.05 m² in a hydraulic system. What is the pressure transmitted throughout the liquid?", options: ["10 Pa", "100 Pa", "1,000 Pa", "2,500 Pa"], correct: 2 },
+                    { q: "A force of 1 N acting on an area of 1 m² is defined as:", options: ["1 Newton", "1 Bar", "1 Pascal", "1 Joule"], correct: 2 }
+                ]
+            },
+            physics_work_energy: {
+                name: "Unit 5: Work, Energy and Power",
+                questions: [
+                    { q: "In Physics, work is said to be done only when:", options: ["Energy is transformed", "A force is applied and the body is displaced in the direction of the force", "The body is lifted to a height", "The body is in motion"], correct: 1 },
+                    { q: "What is the SI unit of work?", options: ["Watt (W)", "Newton (N)", "Joule (J)", "Pascal (Pa)"], correct: 2 },
+                    { q: "What is defined as the capacity of a body to do work?", options: ["Power", "Force", "Energy", "Momentum"], correct: 2 },
+                    { q: "A raised foot before kicking a football possesses what type of energy due to the change in configuration?", options: ["Kinetic energy", "Chemical energy", "Potential energy", "Heat energy"], correct: 2 },
+                    { q: "Which scenario represents a situation where no work is done according to the scientific definition?", options: ["A man pushing a wall that does not move", "A car accelerating on a flat road", "A person lifting a box vertically", "A body falling from a height"], correct: 0 },
+                    { q: "One Joule (J) of work is done when a force of 1 N causes a displacement of:", options: ["1 m", "1 cm", "10 m", "1 kg"], correct: 0 },
+                    { q: "The energy possessed by a body by virtue of its position or configuration is called:", options: ["Kinetic energy", "Potential energy", "Mechanical energy", "Chemical energy"], correct: 1 },
+                    { q: "The energy possessed by a body by virtue of its motion is called:", options: ["Potential energy", "Heat energy", "Kinetic energy", "Sound energy"], correct: 2 },
+                    { q: "What two factors does the kinetic energy of a moving body depend upon?", options: ["Volume and temperature", "Mass and velocity", "Time and acceleration", "Height and gravity"], correct: 1 },
+                    { q: "What is the term for the rate of doing work?", options: ["Energy", "Force", "Power", "Momentum"], correct: 2 },
+                    { q: "The SI unit of power is:", options: ["Joule (J)", "Newton-meter (N-m)", "Pascal (Pa)", "Watt (W)"], correct: 3 },
+                    { q: "A person does 500 J of work in 5 seconds. What is the power consumed by the person?", options: ["10 W", "100 W", "2500 W", "5 W"], correct: 1 },
+                    { q: "A stone of mass 5 kg is lifted up to a height of 3 m. Assuming g=9.8 m/s², what is the Potential Energy (PE) stored in the stone? (PE=mgh)", options: ["15 J", "147 J", "49 J", "150 J"], correct: 1 },
+                    { q: "What is the work done by a man standing with a load of 25 kg at a height of 1 m from the ground?", options: ["24.5 J", "25 J", "0 J", "245 J"], correct: 2 },
+                    { q: "Which formula correctly calculates Kinetic Energy (KE)?", options: ["KE = mgh", "KE = Force × Distance", "KE = ½mv²", "KE = Power × Time"], correct: 2 },
+                    { q: "The transformation of one form of energy into another form is called:", options: ["Law of Conservation of Energy", "Energy conversion", "Transformation of energy", "Energy dissipation"], correct: 2 },
+                    { q: "Which device converts Chemical Energy into Electric Energy?", options: ["Generator", "Electric Motor", "Cell/Battery", "Electric Fan"], correct: 2 },
+                    { q: "The energy transformation in a torch light (flashlight) is:", options: ["Electric energy → Light energy", "Chemical energy → Light energy", "Chemical energy → Electric energy → Light energy", "Light energy → Electric energy"], correct: 2 },
+                    { q: "What is meant by a machine having 100 W power?", options: ["It can do 100 J of work", "It can work faster", "It can do 100 J of work in 1 second", "It has a high Mechanical Advantage"], correct: 2 },
+                    { q: "Which of the following is an example of a body possessing energy due to its motion?", options: ["Water stored in a dam", "A stretched rubber", "A bullet fired from the gun", "A stone at the top of a slide"], correct: 2 }
+                ]
+            },
+            physics_heat: {
+                name: "Unit 6: Heat",
+                questions: [
+                    { q: "What is defined as the form of energy that produces the sensation of hotness or coldness in the body?", options: ["Temperature", "Heat", "Work", "Radiation"], correct: 1 },
+                    { q: "What is the SI unit of heat?", options: ["Celsius (°C)", "Joule (J)", "Kelvin (K)", "Calorie (cal)"], correct: 1 },
+                    { q: "What is defined as the degree of hotness or coldness of a body?", options: ["Heat", "Energy", "Temperature", "Specific heat capacity"], correct: 2 },
+                    { q: "The SI unit of temperature is:", options: ["Degree Celsius (°C)", "Degree Fahrenheit (°F)", "Kelvin (K)", "Calorie (cal)"], correct: 2 },
+                    { q: "Heat always flows from a body at:", options: ["Low temperature to a body at high temperature", "High heat content to low heat content", "High temperature to a body at low temperature", "Higher density to lower density"], correct: 2 },
+                    { q: "What instrument is used to measure the temperature of a body?", options: ["Barometer", "Hydrometer", "Calorimeter", "Thermometer"], correct: 3 },
+                    { q: "Which two fixed points are used to graduate a thermometer scale?", options: ["Boiling point of water and freezing point of alcohol", "Boiling point of mercury and freezing point of water", "Boiling point of water and freezing point of water", "Room temperature and body temperature"], correct: 2 },
+                    { q: "What is the upper fixed point and lower fixed point of the Celsius scale at standard pressure?", options: ["100°C and 0°C", "212°C and 32°C", "373 K and 273 K", "100°C and –40°C"], correct: 0 },
+                    { q: "Convert 50°C to the Fahrenheit scale using the formula C/5 = (F-32)/9.", options: ["10°F", "90°F", "122°F", "160°F"], correct: 2 },
+                    { q: "What is the value of 0°C on the Kelvin scale?", options: ["100 K", "273 K", "373 K", "0 K"], correct: 1 },
+                    { q: "The process of heat transfer in which heat travels through a solid from the hot end to the cold end without the actual movement of particles is called:", options: ["Convection", "Radiation", "Conduction", "Thermal expansion"], correct: 2 },
+                    { q: "Which method of heat transfer is dominant in gases and liquids, involving the actual movement of heated fluid particles?", options: ["Conduction", "Convection", "Radiation", "Insulation"], correct: 1 },
+                    { q: "Heat from the Sun reaches the Earth through the vacuum of space primarily by which process?", options: ["Conduction", "Convection", "Radiation", "Absorption"], correct: 2 },
+                    { q: "Materials that allow heat to pass through them easily are called:", options: ["Insulators", "Non-metals", "Conductors", "Radiators"], correct: 2 },
+                    { q: "In which type of material is heat transfer mainly by the process of conduction?", options: ["Liquids", "Gases", "Solids", "Vacuum"], correct: 2 },
+                    { q: "Land breeze and sea breeze are examples of natural phenomena that occur due to the heat transfer process of:", options: ["Conduction", "Convection", "Radiation", "Reflection"], correct: 1 },
+                    { q: "What are materials called that do not allow heat to pass through them easily?", options: ["Metals", "Conductors", "Insulators", "Semi-conductors"], correct: 2 },
+                    { q: "Which process of heat transfer does not require any medium?", options: ["Conduction", "Convection", "Radiation", "Both Conduction and Convection"], correct: 2 },
+                    { q: "If a body's temperature is 30°C, what is its equivalent temperature on the Kelvin scale?", options: ["30 K", "303 K", "243 K", "300 K"], correct: 1 },
+                    { q: "Which is the clinical thermometer designed to measure?", options: ["Temperature of water", "Temperature of food", "Human body temperature", "Boiling point of water"], correct: 2 }
+                ]
+            }
+        }
+    },
+    health: {
+        name: "Health & PE",
+        icon: "Heart", // Assuming 'Heart' is a component/variable reference
+        color: "from-red-500 to-red-600",
+        chapters: {
+            humanbody: {
+                name: "Human Body Organization",
+                questions: [
+                    { q: "What is considered the basic unit of life in the human body?", options: ["Organ", "Tissue", "Cell", "Organ System"], correct: 2 },
+                    { q: "The human body is described as a multicellular organism. What does 'multicellular' primarily mean?", options: ["Having only one cell", "Having many different colors", "Having many cells", "Having many systems"], correct: 2 },
+                    { q: "In the hierarchy of organization, what level comes directly after cells?", options: ["Organ systems", "Organs", "Homeostasis", "Tissues"], correct: 3 },
+                    { q: "A collection of similar tissues working together forms what level of organization?", options: ["A cell", "An organ", "An external world", "A basic unit"], correct: 1 },
+                    { q: "What is the highest level of structural organization mentioned, which is made up of a collection of organs?", options: ["Organ systems", "Tissues", "Homeostasis", "Multicellular"], correct: 0 },
+                    { q: "The arrangement of structures from cells to tissues to organs and organ systems is called a remarkable:", options: ["Simple structure", "Complex structure", "Random structure", "Single structure"], correct: 1 }
+                ]
+            }
+        }
+    }
+};
         // Main App Component
         function App() {
             const { useState, useEffect } = React;
@@ -1200,3 +1186,4 @@
     </script>
 </body>
 </html>
+
