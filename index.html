@@ -3,32 +3,73 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Class 8 Subject Quiz App</title>
+    <title>Class 8 Quiz App</title>
+    <!-- PWA Configuration Links -->
+    <link rel="manifest" href="./manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-icon" href="https://placehold.co/192x192/4F46E5/ffffff?text=QZ">
+    
     <!-- Load Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Load React, ReactDOM, and Babel -->
     <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
     <style>
-        /* Custom font */
+        /* Custom font and layout setup */
         body {
             font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            overscroll-behavior-y: contain; /* Prevents pull-to-refresh on mobile */
         }
-        /* Ensure the app container fills the viewport */
         #root {
             min-height: 100vh;
         }
     </style>
+    
+    <!-- PWA Manifest embedded for single-file deployment -->
+    <script id="manifest-data" type="application/json">
+    {
+      "name": "Class 8 Quiz",
+      "short_name": "C8 Quiz",
+      "description": "Interactive quiz app for Class 8 students.",
+      "start_url": ".",
+      "display": "standalone",
+      "background_color": "#ffffff",
+      "theme_color": "#4F46E5",
+      "icons": [
+        {
+          "src": "https://placehold.co/192x192/4F46E5/ffffff?text=QZ",
+          "sizes": "192x192",
+          "type": "image/png"
+        },
+        {
+          "src": "https://placehold.co/512x512/4F46E5/ffffff?text=QZ",
+          "sizes": "512x512",
+          "type": "image/png"
+        }
+      ]
+    }
+    </script>
+    <script>
+        // Inject the manifest.json file dynamically because Netlify/GitHub Pages needs the file path
+        // For a true single file solution, this is a workaround. 
+        // NOTE: For best results on Netlify, you should still include a manifest.json file with the same content
+        // alongside this index.html file. For the purpose of this single-file output, we emulate it.
+        const manifestData = document.getElementById('manifest-data').textContent;
+        const manifestBlob = new Blob([manifestData], {type: 'application/json'});
+        const manifestUrl = URL.createObjectURL(manifestBlob);
+        document.querySelector('link[rel="manifest"]').setAttribute('href', manifestUrl);
+    </script>
 </head>
 <body>
     <div id="root"></div>
 
     <script type="text/babel">
-        // Import necessary icons using inline SVGs or placeholders since Lucide-React is not available here
-        // We will use standard text/emojis for simplicity or minimal inline SVG structures.
-        
-        // Icon Components (Simple Placeholders/Functional Icons)
+        // --- ICON COMPONENTS (Simplified Inline SVGs) ---
         const Icon = ({ size = 20, className = '', children }) => (
             <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
                 {children}
@@ -352,31 +393,33 @@
 
         // Main App Component
         function App() {
+            const { useState, useEffect } = React;
+            
             // --- AUTHENTICATION & PERSISTENCE STATE ---
-            const [isLoggedIn, setIsLoggedIn] = React.useState(false);
-            const [currentUser, setCurrentUser] = React.useState(null);
-            const [users, setUsers] = React.useState({});
-            const [loginForm, setLoginForm] = React.useState({ username: '', password: '' });
-            const [isSignup, setIsSignup] = React.useState(false);
-            const [loginError, setLoginError] = React.useState('');
+            const [isLoggedIn, setIsLoggedIn] = useState(false);
+            const [currentUser, setCurrentUser] = useState(null);
+            const [users, setUsers] = useState({});
+            const [loginForm, setLoginForm] = useState({ username: '', password: '' });
+            const [isSignup, setIsSignup] = useState(false);
+            const [loginError, setLoginError] = useState('');
 
             // --- QUIZ STATE ---
-            const [screen, setScreen] = React.useState('home');
-            const [selectedSubject, setSelectedSubject] = React.useState(null);
-            const [selectedChapter, setSelectedChapter] = React.useState(null);
-            const [currentQuestion, setCurrentQuestion] = React.useState(0);
-            const [score, setScore] = React.useState(0);
-            const [selectedAnswer, setSelectedAnswer] = React.useState(null);
-            const [showFeedback, setShowFeedback] = React.useState(false);
-            const [skippedQuestions, setSkippedQuestions] = React.useState([]);
-            const [answeredQuestions, setAnsweredQuestions] = React.useState([]);
-            const [progress, setProgress] = React.useState({});
-            const [timeSpent, setTimeSpent] = React.useState(0);
-            const [quizStartTime, setQuizStartTime] = React.useState(null);
-            const [quizQuestions, setQuizQuestions] = React.useState([]);
+            const [screen, setScreen] = useState('home');
+            const [selectedSubject, setSelectedSubject] = useState(null);
+            const [selectedChapter, setSelectedChapter] = useState(null);
+            const [currentQuestion, setCurrentQuestion] = useState(0);
+            const [score, setScore] = useState(0);
+            const [selectedAnswer, setSelectedAnswer] = useState(null);
+            const [showFeedback, setShowFeedback] = useState(false);
+            const [skippedQuestions, setSkippedQuestions] = useState([]);
+            const [answeredQuestions, setAnsweredQuestions] = useState([]);
+            const [progress, setProgress] = useState({});
+            const [timeSpent, setTimeSpent] = useState(0);
+            const [quizStartTime, setQuizStartTime] = useState(null);
+            const [quizQuestions, setQuizQuestions] = useState([]);
 
             // Load users and check login on mount
-            React.useEffect(() => {
+            useEffect(() => {
                 try {
                     const savedUsers = localStorage.getItem('quizAppUsers');
                     if (savedUsers) {
@@ -400,7 +443,7 @@
             }, []);
 
             // Save progress whenever it changes
-            React.useEffect(() => {
+            useEffect(() => {
                 if (currentUser && isLoggedIn && Object.keys(progress).length > 0) {
                     try {
                         localStorage.setItem(`quizAppProgress_${currentUser.username}`, JSON.stringify(progress));
@@ -411,7 +454,7 @@
             }, [progress, currentUser, isLoggedIn]);
 
             // Timer effect
-            React.useEffect(() => {
+            useEffect(() => {
                 let interval;
                 if (screen === 'quiz' && quizStartTime) {
                     interval = setInterval(() => {
@@ -1073,6 +1116,87 @@
 
         // Render the App component
         ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+    
+    <!-- PWA Service Worker (Handles caching for offline use) -->
+    <script>
+        // Service Worker Script embedded as a string, then registered
+        const serviceWorkerCode = `
+            const CACHE_NAME = 'quiz-app-v1';
+            const urlsToCache = [
+                '/', 
+                'index.html', 
+                'https://cdn.tailwindcss.com',
+                'https://unpkg.com/react@18/umd/react.development.js',
+                'https://unpkg.com/react-dom@18/umd/react-dom.development.js',
+                'https://unpkg.com/@babel/standalone/babel.min.js'
+                // Note: Placeholder image URLs are often blocked or should be cached manually if needed.
+            ];
+
+            // Install event: Caches all necessary files
+            self.addEventListener('install', event => {
+                event.waitUntil(
+                    caches.open(CACHE_NAME)
+                        .then(cache => {
+                            console.log('Opened cache');
+                            return cache.addAll(urlsToCache).catch(err => {
+                                console.error('Failed to cache resources:', err);
+                            });
+                        })
+                );
+            });
+
+            // Activate event: Cleans up old caches
+            self.addEventListener('activate', event => {
+                const cacheWhitelist = [CACHE_NAME];
+                event.waitUntil(
+                    caches.keys().then(cacheNames => {
+                        return Promise.all(
+                            cacheNames.map(cacheName => {
+                                if (cacheWhitelist.indexOf(cacheName) === -1) {
+                                    return caches.delete(cacheName);
+                                }
+                            })
+                        );
+                    })
+                );
+            });
+
+            // Fetch event: Serves content from cache first, then network (Cache-First strategy)
+            self.addEventListener('fetch', event => {
+                event.respondWith(
+                    caches.match(event.request)
+                        .then(response => {
+                            // Cache hit - return response
+                            if (response) {
+                                return response;
+                            }
+                            // No cache hit - fetch from network
+                            return fetch(event.request).catch(error => {
+                                // Fallback for specific offline content if needed
+                                console.log('Fetch failed; cache fallback.');
+                            });
+                        })
+                );
+            });
+        `;
+
+        // Registering the Service Worker
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                // Create a Blob from the service worker script string
+                const swBlob = new Blob([serviceWorkerCode], { type: 'application/javascript' });
+                const swUrl = URL.createObjectURL(swBlob);
+                
+                navigator.serviceWorker.register(swUrl)
+                    .then(registration => {
+                        console.log('ServiceWorker registration successful with scope: ', registration.scope);
+                    })
+                    .catch(error => {
+                        console.log('ServiceWorker registration failed: ', error);
+                    });
+            });
+        }
     </script>
 </body>
 </html>
